@@ -1,0 +1,9 @@
+# SwiftPM build output
+.build/
+.swiftpm/
+
+# Packaged app bundle + DMG (build artifacts — ship as GitHub Releases instead)
+build/
+
+# macOS
+.DS_Store
