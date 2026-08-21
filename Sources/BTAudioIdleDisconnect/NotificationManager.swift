@@ -36,13 +36,19 @@ final class NotificationManager: NSObject {
         }
     }
 
-    func sendPreDisconnect(deviceNames: [String], graceSeconds: TimeInterval) {
+    func sendPreDisconnect(deviceNames: [String], graceSeconds: TimeInterval, withSound: Bool) {
         let content = UNMutableNotificationContent()
         content.title = "Disconnecting Bluetooth audio"
         let joined = deviceNames.joined(separator: ", ")
         let prefix = deviceNames.isEmpty ? "Devices" : joined
         content.body = "\(prefix) will be disconnected in \(Int(graceSeconds))s. Tap Cancel to keep connected."
-        content.sound = .default
+
+        // An alert sound opens the default output device, which the idle detector reads as
+        // playback — the notification would cancel the very disconnect it announces.
+        if withSound {
+            content.sound = .default
+        }
+
         content.categoryIdentifier = categoryId
 
         let request = UNNotificationRequest(

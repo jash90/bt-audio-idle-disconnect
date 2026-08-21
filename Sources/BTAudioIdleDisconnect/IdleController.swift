@@ -14,6 +14,7 @@ final class IdleController {
     private(set) var currentIdleDuration: TimeInterval = 0
     private(set) var graceStartedAt: Date?
     private(set) var inGracePeriod: Bool = false
+    private var lastDisconnectAt: Date?
 
     var onStateChange: (() -> Void)?
 
@@ -110,14 +111,21 @@ final class IdleController {
             return
         }
 
-        let bundleIds = settings.settings.whitelistApps.map { $0.bundleId }
-        if appRunningMonitor.isAnyRunning(bundleIds: bundleIds) {
+        if isWhitelistedAppRunning() {
             AppLogger.info("Whitelisted app running — timer suppressed")
             return
         }
 
         let timeouts = monitored.map { settings.effectiveTimeout(forAddress: $0.address) }
-        let timeout = timeouts.min() ?? settings.settings.globalTimeoutSeconds
+        let configured = timeouts.min() ?? settings.settings.globalTimeoutSeconds
+        // A device that came back right after we dropped it gets the cooldown as a floor,
+        // so an auto-reconnect can't be met with an immediate second disconnect.
+        let timeout = max(configured, reconnectCooldownRemaining())
+
+        if timeout > configured {
+            AppLogger.info("Reconnect cooldown active — first fire deferred to \(Int(timeout))s")
+        }
+
         idleStartedAt = Date()
         currentIdleDuration = timeout
         let names = monitored.map { $0.name }.joined(separator: ", ")
@@ -137,6 +145,14 @@ final class IdleController {
 
     private func beginGracePeriod() {
         idleTimer = nil
+
+        if isWhitelistedAppRunning() {
+            AppLogger.info("Whitelisted app started during countdown — disconnect aborted")
+            startIdleTimerIfNeeded()
+            onStateChange?()
+            return
+        }
+
         let grace = settings.settings.preDisconnectGraceSeconds
         if grace <= 0 {
             disconnectMonitoredDevices()
@@ -149,7 +165,11 @@ final class IdleController {
         let names = monitoredConnectedDevices().map { $0.name }
         AppLogger.info("Grace period started; disconnect in \(Int(grace))s")
         if settings.settings.notificationsEnabled {
-            notifications.sendPreDisconnect(deviceNames: names, graceSeconds: grace)
+            notifications.sendPreDisconnect(
+                deviceNames: names,
+                graceSeconds: grace,
+                withSound: settings.settings.notificationSoundEnabled
+            )
         }
         let timer = DispatchSource.makeTimerSource(queue: .main)
         timer.schedule(deadline: .now() + grace)
@@ -172,9 +192,25 @@ final class IdleController {
             AppLogger.info("Nothing to disconnect")
             return
         }
+        var disconnectedAny = false
+
         for d in monitored {
-            bluetoothManager.disconnect(address: d.address)
+            disconnectedAny = bluetoothManager.disconnect(address: d.address) || disconnectedAny
         }
+
+        if disconnectedAny {
+            lastDisconnectAt = Date()
+        }
+    }
+
+    private func isWhitelistedAppRunning() -> Bool {
+        let bundleIds = settings.settings.whitelistApps.map { $0.bundleId }
+        return appRunningMonitor.isAnyRunning(bundleIds: bundleIds)
+    }
+
+    private func reconnectCooldownRemaining() -> TimeInterval {
+        guard let last = lastDisconnectAt else { return 0 }
+        return max(0, settings.settings.reconnectCooldownSeconds - Date().timeIntervalSince(last))
     }
 
     private func stopAllTimers() {

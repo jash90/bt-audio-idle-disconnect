@@ -30,6 +30,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             settings: settings
         )
 
+        bluetoothManager.onConnectionChange = { [weak self] in
+            self?.idleController.recomputeMonitoredState()
+        }
+        bluetoothManager.startConnectionNotifications()
+
         audioMonitor.onStateChange = { [weak self] isPlaying in
             self?.idleController.audioPlaybackChanged(isPlaying: isPlaying)
         }

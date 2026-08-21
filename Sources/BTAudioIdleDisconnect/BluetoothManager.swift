@@ -8,7 +8,52 @@ struct BTDeviceInfo: Identifiable, Hashable {
     var id: String { address }
 }
 
-final class BluetoothManager {
+final class BluetoothManager: NSObject {
+    /// Fires when a paired audio device connects or drops, so the idle timer can be armed
+    /// for headphones that connect while nothing is playing — an audio state change alone
+    /// never happens in that case.
+    var onConnectionChange: (() -> Void)?
+
+    private var connectNotification: IOBluetoothUserNotification?
+    private var disconnectNotifications: [String: IOBluetoothUserNotification] = [:]
+
+    func startConnectionNotifications() {
+        connectNotification = IOBluetoothDevice.register(
+            forConnectNotifications: self,
+            selector: #selector(deviceConnected(_:device:))
+        )
+        pairedAudioDevices().filter { $0.isConnected() }.forEach(observeDisconnect)
+    }
+
+    @objc private func deviceConnected(_ notification: IOBluetoothUserNotification, device: IOBluetoothDevice) {
+        guard Self.isAudio(device) else { return }
+
+        AppLogger.info("BT audio device connected: \(device.name ?? device.addressString ?? "unknown")")
+        observeDisconnect(device)
+        onConnectionChange?()
+    }
+
+    @objc private func deviceDisconnected(_ notification: IOBluetoothUserNotification, device: IOBluetoothDevice) {
+        notification.unregister()
+
+        guard let address = device.addressString,
+              disconnectNotifications.removeValue(forKey: address) != nil else { return }
+
+        AppLogger.info("BT audio device disconnected: \(device.name ?? address)")
+        onConnectionChange?()
+    }
+
+    /// `register(forConnectNotifications:)` also fires for devices that are already
+    /// connected, so the same device can arrive twice — keep one observer per address.
+    private func observeDisconnect(_ device: IOBluetoothDevice) {
+        guard let address = device.addressString, disconnectNotifications[address] == nil else { return }
+
+        disconnectNotifications[address] = device.register(
+            forDisconnectNotification: self,
+            selector: #selector(deviceDisconnected(_:device:))
+        )
+    }
+
     func pairedDevices() -> [IOBluetoothDevice] {
         (IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice]) ?? []
     }

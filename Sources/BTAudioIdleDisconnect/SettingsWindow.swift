@@ -85,12 +85,37 @@ private struct GeneralTab: View {
                     range: 1...60, step: 1,
                     formatter: { "\(Int($0)) min" }
                 )
+                SliderRow(
+                    title: "Confirm playback after",
+                    value: Binding(
+                        get: { settings.settings.playbackConfirmSeconds },
+                        set: { settings.settings.playbackConfirmSeconds = $0 }
+                    ),
+                    range: 0...15, step: 1,
+                    formatter: { "\(Int($0))s" }
+                )
+                Text("Audio shorter than this counts as a system beep, not playback, and does not reset the idle timer.")
+                    .font(.caption).foregroundColor(.secondary)
+                SliderRow(
+                    title: "Reconnect cooldown",
+                    value: Binding(
+                        get: { settings.settings.reconnectCooldownSeconds },
+                        set: { settings.settings.reconnectCooldownSeconds = $0 }
+                    ),
+                    range: 0...300, step: 30,
+                    formatter: { "\(Int($0))s" }
+                )
             }
             Section("Behavior") {
                 Toggle("Notify before disconnecting", isOn: Binding(
                     get: { settings.settings.notificationsEnabled },
                     set: { settings.settings.notificationsEnabled = $0 }
                 ))
+                Toggle("Play a sound with that notification", isOn: Binding(
+                    get: { settings.settings.notificationSoundEnabled },
+                    set: { settings.settings.notificationSoundEnabled = $0 }
+                ))
+                .disabled(!settings.settings.notificationsEnabled)
                 Toggle("Pause timer when system sleeps", isOn: Binding(
                     get: { settings.settings.pauseOnSleep },
                     set: { settings.settings.pauseOnSleep = $0 }

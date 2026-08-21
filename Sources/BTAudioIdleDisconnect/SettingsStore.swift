@@ -21,8 +21,32 @@ struct GlobalSettings: Codable, Equatable {
     var whitelistApps: [AppRule] = []
     var devices: [DeviceSettings] = []
     var notificationsEnabled: Bool = true
+    var notificationSoundEnabled: Bool = false
+    var playbackConfirmSeconds: TimeInterval = 6
+    var reconnectCooldownSeconds: TimeInterval = 60
     var pauseOnSleep: Bool = true
     var disconnectOnSleep: Bool = false
+}
+
+extension GlobalSettings {
+    /// Synthesized decoding ignores property defaults and throws on a missing key, and
+    /// `SettingsStore` swallows that with `try?` — so one added field would silently reset
+    /// every stored device and timeout. Declared in an extension to keep `GlobalSettings()`.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.init()
+        globalTimeoutSeconds = try c.decodeIfPresent(TimeInterval.self, forKey: .globalTimeoutSeconds) ?? globalTimeoutSeconds
+        preDisconnectGraceSeconds = try c.decodeIfPresent(TimeInterval.self, forKey: .preDisconnectGraceSeconds) ?? preDisconnectGraceSeconds
+        snoozeOnCancelSeconds = try c.decodeIfPresent(TimeInterval.self, forKey: .snoozeOnCancelSeconds) ?? snoozeOnCancelSeconds
+        whitelistApps = try c.decodeIfPresent([AppRule].self, forKey: .whitelistApps) ?? whitelistApps
+        devices = try c.decodeIfPresent([DeviceSettings].self, forKey: .devices) ?? devices
+        notificationsEnabled = try c.decodeIfPresent(Bool.self, forKey: .notificationsEnabled) ?? notificationsEnabled
+        notificationSoundEnabled = try c.decodeIfPresent(Bool.self, forKey: .notificationSoundEnabled) ?? notificationSoundEnabled
+        playbackConfirmSeconds = try c.decodeIfPresent(TimeInterval.self, forKey: .playbackConfirmSeconds) ?? playbackConfirmSeconds
+        reconnectCooldownSeconds = try c.decodeIfPresent(TimeInterval.self, forKey: .reconnectCooldownSeconds) ?? reconnectCooldownSeconds
+        pauseOnSleep = try c.decodeIfPresent(Bool.self, forKey: .pauseOnSleep) ?? pauseOnSleep
+        disconnectOnSleep = try c.decodeIfPresent(Bool.self, forKey: .disconnectOnSleep) ?? disconnectOnSleep
+    }
 }
 
 final class SettingsStore: ObservableObject {
