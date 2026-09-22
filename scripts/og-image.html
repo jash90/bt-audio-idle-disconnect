@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- Template for site/assets/img/og-image-{pl,en}.jpg, rendered at 1200x630 by
+     scripts/site-check.cjs (?lang=pl|en). Not deployed. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+    color: #fff; display: grid; grid-template-columns: 1fr 560px; align-items: center; gap: 24px;
+    padding: 0 48px 0 72px; box-sizing: border-box;
+    background:
+      radial-gradient(700px 400px at 90% 0%, rgba(53,162,215,.45), transparent 65%),
+      linear-gradient(155deg, #0e2a72 0%, #1d51a3 60%, #2677b9 100%);
+  }
+  img.icon { width: 120px; height: 120px; filter: drop-shadow(0 12px 22px rgba(0,0,0,.35)); }
+  h1 { font-size: 64px; margin: 20px 0 14px; letter-spacing: -1.5px; }
+  p { font-size: 30px; line-height: 1.3; color: #c4e2fc; margin: 0; }
+  img.shot { width: 540px; border-radius: 14px; box-shadow: 0 30px 60px -18px rgba(0,0,0,.6); }
+</style>
+</head>
+<body>
+  <div>
+    <img class="icon" src="../site/assets/img/icon-256.png" alt="">
+    <h1>BT Audio Idle</h1>
+    <p id="tagline"></p>
+  </div>
+  <img class="shot" src="../site/assets/screenshots/preferences-devices-dark.webp" alt="">
+  <script>
+    var lang = new URLSearchParams(location.search).get('lang') || 'pl';
+    document.getElementById('tagline').textContent = lang === 'en'
+      ? 'Bluetooth headphones that disconnect themselves when your Mac goes quiet.'
+      : 'Słuchawki Bluetooth same się rozłączają, gdy Mac zamilknie.';
+    document.documentElement.lang = lang;
+  </script>
+</body>
+</html>

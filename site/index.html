@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BT Audio Idle – słuchawki Bluetooth same się rozłączają, gdy Mac milknie</title>
+  <meta name="description" content="Darmowa aplikacja w pasku menu macOS. Gdy przez 10 minut nic nie gra, rozłącza słuchawki i głośniki Bluetooth, a wcześniej wysyła powiadomienie z przyciskiem Cancel.">
+  <link rel="canonical" href="https://jash90.github.io/bt-audio-idle-disconnect/">
+  <link rel="alternate" hreflang="pl" href="https://jash90.github.io/bt-audio-idle-disconnect/">
+  <link rel="alternate" hreflang="en" href="https://jash90.github.io/bt-audio-idle-disconnect/en/">
+  <link rel="alternate" hreflang="x-default" href="https://jash90.github.io/bt-audio-idle-disconnect/">
+  <meta name="theme-color" content="#0e2a72">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BT Audio Idle">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="BT Audio Idle – słuchawki Bluetooth same się rozłączają, gdy Mac milknie">
+  <meta property="og:description" content="Aplikacja w pasku menu macOS: po okresie ciszy rozłącza słuchawki i głośniki Bluetooth. Z ostrzeżeniem i przyciskiem Cancel.">
+  <meta property="og:url" content="https://jash90.github.io/bt-audio-idle-disconnect/">
+  <meta property="og:image" content="https://jash90.github.io/bt-audio-idle-disconnect/assets/img/og-image-pl.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ikona BT Audio Idle i okno ustawień z listą urządzeń Bluetooth">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/img/icon-256.png">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Przejdź do treści</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./">
+        <img src="assets/img/favicon-64.png" alt="" width="32" height="32">
+        <span>BT Audio Idle</span>
+      </a>
+      <nav class="main-nav" aria-label="Główna nawigacja">
+        <ul>
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#funkcje">Funkcje</a></li>
+          <li><a href="#jak-to-dziala">Jak to działa</a></li>
+          <li><a href="#galeria">Galeria</a></li>
+          <li><a href="#instalacja">Instalacja</a></li>
+        </ul>
+      </nav>
+      <a class="lang-switch" href="en/" hreflang="en" lang="en">
+        <span aria-hidden="true">EN</span><span class="visually-hidden">English version</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <img class="hero-icon" src="assets/img/icon-256.webp" alt="Ikona aplikacji BT Audio Idle: słuchawki ze znakiem Bluetooth i księżycem" width="88" height="88">
+          <h1 id="hero-title">Twoje słuchawki Bluetooth same się rozłączą, gdy Mac zamilknie</h1>
+          <p class="lead">BT Audio Idle siedzi w pasku menu macOS i pilnuje ciszy. Jeśli przez 10&nbsp;minut nic nie gra, rozłącza słuchawki i głośniki Bluetooth. Nie tracą baterii, kiedy leżą na biurku, i są wolne dla telefonu.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="https://github.com/jash90/bt-audio-idle-disconnect/releases/latest">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+              Pobierz dla macOS
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/jash90/bt-audio-idle-disconnect">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              Kod na GitHubie
+            </a>
+          </div>
+          <p class="hero-meta">Wersja 1.1.0 · macOS 13 lub nowszy · plik DMG · bezpłatnie</p>
+        </div>
+        <div class="hero-shot">
+          <picture>
+            <source srcset="assets/screenshots/preferences-devices-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="assets/screenshots/preferences-devices-light.webp" width="632" height="564" alt="Karta Devices w ustawieniach BT Audio Idle: cztery sparowane urządzenia audio, każde z przełącznikiem monitorowania i opcją własnego czasu bezczynności">
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem" class="section" aria-labelledby="problem-title">
+      <div class="container">
+        <p class="eyebrow">Problem</p>
+        <h2 id="problem-title">Słuchawki podłączone do Maca, który od dawna nic nie gra</h2>
+        <p class="section-intro">Muzyka ucichła, słuchawki leżą na biurku, a Ty jesteś w kuchni. macOS nie rozłączy ich sam: trzeba wyłączyć Bluetooth albo kliknąć ręcznie w ustawieniach.</p>
+        <div class="problem-grid">
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2M6 11v2"/></svg></div>
+            <h3>Bateria idzie w ciszę</h3>
+            <p>Połączone słuchawki zużywają energię, nawet gdy nic nie odtwarzają. Wieczorem okazuje się, że trzeba je ładować.</p>
+          </article>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+            <h3>Telefon nie może ich przejąć</h3>
+            <p>Dopóki Mac trzyma połączenie, słuchawki często nie połączą się z telefonem ani tabletem bez ręcznego przełączania.</p>
+          </article>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></div>
+            <h3>Dźwięk trafia nie tam, gdzie trzeba</h3>
+            <p>Zapomniany głośnik w innym pokoju wciąż jest domyślnym wyjściem. Następny dźwięk zagra właśnie tam.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="funkcje" class="section section-alt" aria-labelledby="features-title">
+      <div class="container">
+        <p class="eyebrow">Funkcje</p>
+        <h2 id="features-title">Co potrafi BT Audio Idle</h2>
+        <p class="section-intro">Wszystko ustawisz w jednym oknie z czterema kartami: General, Devices, Apps i About. Aplikacja ma interfejs po angielsku, dlatego nazwy opcji na zrzutach są po angielsku.</p>
+
+        <div class="feature">
+          <div class="feature-text">
+            <h3>Wykrywanie ciszy i ostrzeżenie przed rozłączeniem</h3>
+            <p>Aplikacja sprawdza w CoreAudio, czy domyślne wyjście dźwięku faktycznie coś odtwarza. Gdy zapada cisza, rusza odliczanie. Przed samym rozłączeniem dostajesz powiadomienie z przyciskiem <strong>Cancel</strong>.</p>
+            <ul>
+              <li><strong>Idle timeout</strong>: ile minut ciszy wystarczy do rozłączenia (1–60, domyślnie 10).</li>
+              <li><strong>Pre-disconnect grace</strong>: ile sekund przed rozłączeniem pojawia się ostrzeżenie (0–120, domyślnie 30).</li>
+              <li><strong>Snooze on cancel</strong>: o ile minut odsunąć rozłączenie po kliknięciu Cancel (1–60, domyślnie 5).</li>
+              <li><strong>Confirm playback after</strong>: krótkie dźwięki systemowe, np. alerty, nie zerują licznika (0–15&nbsp;s, domyślnie 6).</li>
+              <li><strong>Reconnect cooldown</strong>: jeśli urządzenie połączy się ponownie tuż po rozłączeniu, nie zostanie od razu rozłączone drugi raz (0–300&nbsp;s, domyślnie 60).</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="Karta General: czasy i zachowanie">
+            <picture>
+              <source srcset="assets/screenshots/preferences-general-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="assets/screenshots/preferences-general-light.webp" width="632" height="564" loading="lazy" alt="Karta General: suwaki Idle timeout 10 min, Pre-disconnect grace 30 s, Snooze on cancel 5 min, Confirm playback after 6 s, Reconnect cooldown 60 s oraz przełączniki powiadomień i uśpienia">
+            </picture>
+          </button>
+        </div>
+
+        <div class="feature reverse">
+          <div class="feature-text">
+            <h3>Osobne ustawienia dla każdego urządzenia</h3>
+            <p>Lista pokazuje wszystkie sparowane urządzenia audio Bluetooth i to, czy są teraz połączone. Każde możesz wyłączyć z monitorowania albo dać mu własny czas bezczynności zamiast globalnego.</p>
+            <ul>
+              <li>Przełącznik <strong>Monitor</strong> decyduje, czy aplikacja w ogóle rusza dane urządzenie.</li>
+              <li><strong>Custom timeout</strong> ustawia osobny czas dla konkretnego sprzętu, np. 20 minut dla głośnika w kuchni.</li>
+              <li>Gdy połączonych jest kilka urządzeń, odliczanie używa najkrótszego z ich czasów.</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="Karta Devices: urządzenia Bluetooth">
+            <picture>
+              <source srcset="assets/screenshots/preferences-devices-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="assets/screenshots/preferences-devices-light.webp" width="632" height="564" loading="lazy" alt="Karta Devices: Studio Headphones i Kitchen Speaker połączone, Running Earbuds i Office Headset offline; Kitchen Speaker ma własny czas 20 minut, Office Headset ma wyłączone monitorowanie">
+            </picture>
+          </button>
+        </div>
+
+        <div class="feature">
+          <div class="feature-text">
+            <h3>Lista wyjątków dla aplikacji</h3>
+            <p>Podczas rozmowy w Zoomie czy Teamsach bywają długie chwile ciszy, a słuchawki mają zostać połączone. Dodaj takie aplikacje do listy: dopóki któraś z nich działa, odliczanie się nie zaczyna.</p>
+            <ul>
+              <li>Aplikację wybierasz z listy uruchomionych programów (<strong>Add running app…</strong>).</li>
+              <li>Jeśli aplikacja z listy uruchomi się w trakcie odliczania, rozłączenie zostanie przerwane.</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="Karta Apps: lista wyjątków">
+            <picture>
+              <source srcset="assets/screenshots/preferences-apps-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="assets/screenshots/preferences-apps-light.webp" width="632" height="564" loading="lazy" alt="Karta Apps: lista wyjątków z aplikacjami zoom.us, Microsoft Teams i FaceTime oraz przycisk Add running app">
+            </picture>
+          </button>
+        </div>
+
+        <div class="feature reverse">
+          <div class="feature-text">
+            <h3>Uśpienie, autostart i dziennik zdarzeń</h3>
+            <p>Aplikacja reaguje na uśpienie Maca i może uruchamiać się razem z systemem. Wszystko, co robi, zapisuje w pliku dziennika.</p>
+            <ul>
+              <li><strong>Pause timer when system sleeps</strong>: podczas uśpienia odliczanie stoi, a po wybudzeniu zaczyna się od nowa (domyślnie włączone).</li>
+              <li><strong>Disconnect immediately on system sleep</strong>: rozłącza urządzenia od razu przy usypianiu Maca.</li>
+              <li><strong>Launch at login</strong>: autostart przez <code>SMAppService</code>.</li>
+              <li>Dziennik w <code>~/Library/Logs/BTAudioIdleDisconnect.log</code>, rotowany po 1&nbsp;MB.</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="Karta About: plik dziennika i autor">
+            <picture>
+              <source srcset="assets/screenshots/preferences-about-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="assets/screenshots/preferences-about-light.webp" width="632" height="564" loading="lazy" alt="Karta About: nazwa BT Audio Idle Disconnect, ścieżka pliku dziennika z przyciskiem Open log file oraz dane autora">
+            </picture>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="jak-to-dziala" class="section" aria-labelledby="how-title">
+      <div class="container">
+        <p class="eyebrow">Jak to działa</p>
+        <h2 id="how-title">Cztery kroki i możesz o niej zapomnieć</h2>
+        <ol class="steps">
+          <li>
+            <h3>Zainstaluj</h3>
+            <p>Pobierz plik DMG i przeciągnij aplikację do folderu Aplikacje. Przy pierwszym uruchomieniu kliknij ją prawym przyciskiem i wybierz <strong>Otwórz</strong>.</p>
+          </li>
+          <li>
+            <h3>Zezwól na powiadomienia</h3>
+            <p>Bez nich aplikacja nadal rozłącza urządzenia, ale nie zobaczysz ostrzeżenia z przyciskiem Cancel.</p>
+          </li>
+          <li>
+            <h3>Ustaw czasy i urządzenia</h3>
+            <p>Otwórz <strong>Preferences…</strong> z ikony w pasku menu i ustaw czas bezczynności, urządzenia oraz wyjątki.</p>
+          </li>
+          <li>
+            <h3>Słuchaj jak zwykle</h3>
+            <p>Gdy muzyka gra, nic się nie dzieje. Gdy przestaje, obok ikony pojawia się odliczanie, a po nim ostrzeżenie i rozłączenie.</p>
+          </li>
+        </ol>
+
+        <div class="flow">
+          <div class="card">
+            <table class="flow-table">
+              <caption>Co robi aplikacja w danej sytuacji</caption>
+              <tbody>
+                <tr><th scope="row">Coś gra</th><td>Licznik jest wyłączony.</td></tr>
+                <tr><th scope="row">Zapada cisza</th><td>Rusza odliczanie, a w pasku menu widać pozostały czas, np. 9:42.</td></tr>
+                <tr><th scope="row">Czas minął</th><td>Pojawia się powiadomienie, a obok ikony odliczanie w sekundach.</td></tr>
+                <tr><th scope="row">Kliknięto Cancel</th><td>Rozłączenie przesuwa się o czas ustawiony w Snooze on cancel.</td></tr>
+                <tr><th scope="row">Minął czas ostrzeżenia</th><td>Monitorowane urządzenia zostają rozłączone.</td></tr>
+                <tr><th scope="row">Mac zasypia / budzi się</th><td>Odliczanie staje (albo urządzenia zostają rozłączone, jeśli tak ustawisz), a po wybudzeniu rusza od nowa.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Menu w pasku menu</h3>
+            <ul class="menu-list">
+              <li><span>Status</span><span>playing / idle / idle — 9:42 remaining</span></li>
+              <li><span>Connected</span><span>połączone urządzenia, niemonitorowane z dopiskiem</span></li>
+              <li><span>Cancel timer (snooze)</span><span>odsuwa rozłączenie</span></li>
+              <li><span>Disconnect now</span><span><kbd>⌘D</kbd></span></li>
+              <li><span>Preferences…</span><span><kbd>⌘,</kbd></span></li>
+              <li><span>Open Log File</span><span>otwiera dziennik</span></li>
+              <li><span>Quit</span><span><kbd>⌘Q</kbd></span></li>
+            </ul>
+            <div class="notif" role="note">
+              <strong>Powiadomienie przed rozłączeniem (tekst z aplikacji)</strong>
+              Tytuł: „Disconnecting Bluetooth audio”<br>
+              Treść: „Studio Headphones will be disconnected in 30s. Tap Cancel to keep connected.”<br>
+              Przycisk: <strong style="display:inline">Cancel</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria" class="section section-alt" aria-labelledby="gallery-title">
+      <div class="container">
+        <p class="eyebrow">Galeria</p>
+        <h2 id="gallery-title">Zrzuty ekranu</h2>
+        <p class="section-intro">Kliknij zrzut, żeby go powiększyć. Zrzuty pochodzą z działającej aplikacji, a nazwy urządzeń i adresy są przykładowe. Ich wersja (jasna lub ciemna) zależy od motywu Twojego systemu.</p>
+        <ul class="gallery">
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="General: czasy i zachowanie">
+              <picture>
+                <source srcset="assets/screenshots/preferences-general-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="assets/screenshots/preferences-general-light.webp" width="632" height="564" loading="lazy" alt="Karta General z suwakami czasów i przełącznikami zachowania">
+              </picture>
+            </button>
+            <figcaption>General: czasy i zachowanie</figcaption>
+          </figure></li>
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="Devices: urządzenia Bluetooth">
+              <picture>
+                <source srcset="assets/screenshots/preferences-devices-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="assets/screenshots/preferences-devices-light.webp" width="632" height="564" loading="lazy" alt="Karta Devices z czterema sparowanymi urządzeniami audio">
+              </picture>
+            </button>
+            <figcaption>Devices: urządzenia Bluetooth</figcaption>
+          </figure></li>
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="Apps: lista wyjątków">
+              <picture>
+                <source srcset="assets/screenshots/preferences-apps-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="assets/screenshots/preferences-apps-light.webp" width="632" height="564" loading="lazy" alt="Karta Apps z trzema aplikacjami na liście wyjątków">
+              </picture>
+            </button>
+            <figcaption>Apps: lista wyjątków</figcaption>
+          </figure></li>
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="About: dziennik i autor">
+              <picture>
+                <source srcset="assets/screenshots/preferences-about-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="assets/screenshots/preferences-about-light.webp" width="632" height="564" loading="lazy" alt="Karta About ze ścieżką pliku dziennika i danymi autora">
+              </picture>
+            </button>
+            <figcaption>About: dziennik i autor</figcaption>
+          </figure></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="instalacja" class="section" aria-labelledby="install-title">
+      <div class="container">
+        <p class="eyebrow">Instalacja</p>
+        <h2 id="install-title">Pobierz gotową aplikację albo zbuduj ją sam</h2>
+        <div class="install-grid">
+          <div class="card">
+            <h3>Gotowy plik DMG</h3>
+            <ol>
+              <li>Pobierz <a href="https://github.com/jash90/bt-audio-idle-disconnect/releases/latest">najnowszą wersję z GitHub Releases</a>.</li>
+              <li>Otwórz plik DMG i przeciągnij <strong>BT Audio Idle.app</strong> do folderu Aplikacje.</li>
+              <li>Przy pierwszym uruchomieniu kliknij aplikację prawym przyciskiem i wybierz <strong>Otwórz</strong>. Jest podpisana ad-hoc, więc Gatekeeper o to poprosi.</li>
+              <li>Zezwól na powiadomienia i w razie potrzeby włącz <strong>Launch at login</strong>.</li>
+            </ol>
+            <p class="muted" style="margin-top:1rem">Wymagania: macOS 13 lub nowszy i sparowane urządzenie audio Bluetooth.</p>
+          </div>
+          <div class="card">
+            <h3>Ze źródeł</h3>
+            <p class="muted">Potrzebujesz Xcode 15+ albo Swift 5.9+. Skrypt buduje wersję release, składa pakiet <code>.app</code> i podpisuje go ad-hoc.</p>
+<pre><code>git clone https://github.com/jash90/bt-audio-idle-disconnect.git
+cd bt-audio-idle-disconnect
+./scripts/build-app.sh
+mv "build/BT Audio Idle.app" /Applications/
+open "/Applications/BT Audio Idle.app"</code></pre>
+            <details>
+              <summary>Stack technologiczny i pliki</summary>
+              <ul class="stack">
+                <li>Swift 5.9 · SwiftPM</li><li>AppKit (NSStatusItem)</li><li>SwiftUI</li><li>CoreAudio</li>
+                <li>IOBluetooth</li><li>UserNotifications</li><li>ServiceManagement</li>
+              </ul>
+              <p class="muted">Ustawienia: <code>~/Library/Application Support/BTAudioIdleDisconnect/settings.json</code>. Dziennik: <code>~/Library/Logs/BTAudioIdleDisconnect.log</code>. Obraz DMG tworzy <code>./scripts/build-dmg.sh</code>.</p>
+            </details>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1.25rem">
+          <h3>Dobrze wiedzieć</h3>
+          <ul class="limits">
+            <li><strong>Nie ma jej w App Store.</strong> Rozłączanie korzysta ze starszego API <code>IOBluetooth</code>, którego sandbox App Store nie dopuszcza. Aplikacja jest dystrybuowana bezpośrednio.</li>
+            <li><strong>Tylko domyślne wyjście.</strong> Program, który gra na inne urządzenie niż domyślne, może zostać przeoczony.</li>
+            <li><strong>Lista wyjątków sprawdza tylko, czy aplikacja działa.</strong> Nie wie, czy ta aplikacja faktycznie odtwarza dźwięk.</li>
+            <li><strong>Automatyczne ponowne łączenie.</strong> Niektóre urządzenia same łączą się z powrotem. Wtedy zostaną rozłączone po kolejnym okresie ciszy, najwcześniej po czasie Reconnect cooldown.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p><strong>BT Audio Idle</strong> · autor: Bartłomiej Zimny · <a href="https://raccoonsoftware.pl">raccoonsoftware.pl</a></p>
+        <p>Kontakt: <a href="mailto:bartlomiejzimny@outlook.com">bartlomiejzimny@outlook.com</a></p>
+        <p>Kod źródłowy jest publiczny. Repozytorium nie zawiera pliku licencji.</p>
+      </div>
+      <ul>
+        <li><a href="https://github.com/jash90/bt-audio-idle-disconnect">Repozytorium na GitHubie</a></li>
+        <li><a href="https://github.com/jash90/bt-audio-idle-disconnect/releases">Wydania</a></li>
+        <li><a href="en/" hreflang="en" lang="en">English version</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Powiększony zrzut ekranu">
+    <button type="button" class="lightbox-close" aria-label="Zamknij">×</button>
+    <img alt="">
+    <p></p>
+  </dialog>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

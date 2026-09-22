@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BT Audio Idle – Bluetooth headphones that disconnect when your Mac goes quiet</title>
+  <meta name="description" content="A free macOS menu bar app. After 10 minutes of silence it disconnects your Bluetooth headphones and speakers, with a heads-up notification and a Cancel button first.">
+  <link rel="canonical" href="https://jash90.github.io/bt-audio-idle-disconnect/en/">
+  <link rel="alternate" hreflang="pl" href="https://jash90.github.io/bt-audio-idle-disconnect/">
+  <link rel="alternate" hreflang="en" href="https://jash90.github.io/bt-audio-idle-disconnect/en/">
+  <link rel="alternate" hreflang="x-default" href="https://jash90.github.io/bt-audio-idle-disconnect/">
+  <meta name="theme-color" content="#0e2a72">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BT Audio Idle">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:title" content="BT Audio Idle – Bluetooth headphones that disconnect when your Mac goes quiet">
+  <meta property="og:description" content="A macOS menu bar app that disconnects Bluetooth headphones and speakers once nothing has played for a while. With a warning and a Cancel button.">
+  <meta property="og:url" content="https://jash90.github.io/bt-audio-idle-disconnect/en/">
+  <meta property="og:image" content="https://jash90.github.io/bt-audio-idle-disconnect/assets/img/og-image-en.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The BT Audio Idle icon and its preferences window listing Bluetooth devices">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="../assets/img/favicon-64.png">
+  <link rel="apple-touch-icon" href="../assets/img/icon-256.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./">
+        <img src="../assets/img/favicon-64.png" alt="" width="32" height="32">
+        <span>BT Audio Idle</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#install">Install</a></li>
+        </ul>
+      </nav>
+      <a class="lang-switch" href="../" hreflang="pl" lang="pl">
+        <span aria-hidden="true">PL</span><span class="visually-hidden">Wersja polska</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <img class="hero-icon" src="../assets/img/icon-256.webp" alt="BT Audio Idle app icon: headphones with a Bluetooth symbol and a crescent moon" width="88" height="88">
+          <h1 id="hero-title">Your Bluetooth headphones disconnect themselves when your Mac goes quiet</h1>
+          <p class="lead">BT Audio Idle lives in your macOS menu bar and listens for silence. When nothing has played for 10&nbsp;minutes, it disconnects your Bluetooth headphones and speakers, so they stop draining battery on your desk and are free for your phone.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="https://github.com/jash90/bt-audio-idle-disconnect/releases/latest">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+              Download for macOS
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/jash90/bt-audio-idle-disconnect">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              Source on GitHub
+            </a>
+          </div>
+          <p class="hero-meta">Version 1.1.0 · macOS 13 or later · DMG · free</p>
+        </div>
+        <div class="hero-shot">
+          <picture>
+            <source srcset="../assets/screenshots/preferences-devices-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="../assets/screenshots/preferences-devices-light.webp" width="632" height="564" alt="The Devices tab in BT Audio Idle preferences: four paired audio devices, each with a monitoring switch and an optional custom idle timeout">
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem" class="section" aria-labelledby="problem-title">
+      <div class="container">
+        <p class="eyebrow">Problem</p>
+        <h2 id="problem-title">Headphones stay connected to a Mac that stopped playing ages ago</h2>
+        <p class="section-intro">The music stopped, the headphones are on your desk and you are in the kitchen. macOS won’t let go of them on its own: you have to turn Bluetooth off or disconnect them by hand.</p>
+        <div class="problem-grid">
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2M6 11v2"/></svg></div>
+            <h3>Battery drained by silence</h3>
+            <p>Connected headphones use power even when nothing is playing. By evening they need charging again.</p>
+          </article>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+            <h3>Your phone can’t take over</h3>
+            <p>While the Mac holds the connection, headphones often won’t pair up with your phone or tablet unless you switch them over manually.</p>
+          </article>
+          <article class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></div>
+            <h3>Sound ends up in the wrong room</h3>
+            <p>A forgotten speaker in another room is still the default output, so the next sound plays there.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section section-alt" aria-labelledby="features-title">
+      <div class="container">
+        <p class="eyebrow">Features</p>
+        <h2 id="features-title">What BT Audio Idle does</h2>
+        <p class="section-intro">Everything is set up in one window with four tabs: General, Devices, Apps and About.</p>
+
+        <div class="feature">
+          <div class="feature-text">
+            <h3>Silence detection with a warning first</h3>
+            <p>The app asks CoreAudio whether the default output device is actually playing anything. Once it goes quiet, a countdown starts, and right before disconnecting you get a notification with a <strong>Cancel</strong> button.</p>
+            <ul>
+              <li><strong>Idle timeout</strong>: how many minutes of silence trigger a disconnect (1–60, default 10).</li>
+              <li><strong>Pre-disconnect grace</strong>: how many seconds of warning you get before the disconnect (0–120, default 30).</li>
+              <li><strong>Snooze on cancel</strong>: how many minutes Cancel buys you (1–60, default 5).</li>
+              <li><strong>Confirm playback after</strong>: short system sounds such as alerts don’t reset the countdown (0–15&nbsp;s, default 6).</li>
+              <li><strong>Reconnect cooldown</strong>: a device that reconnects right after being dropped isn’t immediately dropped again (0–300&nbsp;s, default 60).</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="General tab: timing and behavior">
+            <picture>
+              <source srcset="../assets/screenshots/preferences-general-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="../assets/screenshots/preferences-general-light.webp" width="632" height="564" loading="lazy" alt="General tab: sliders for Idle timeout 10 min, Pre-disconnect grace 30 s, Snooze on cancel 5 min, Confirm playback after 6 s and Reconnect cooldown 60 s, plus notification and sleep switches">
+            </picture>
+          </button>
+        </div>
+
+        <div class="feature reverse">
+          <div class="feature-text">
+            <h3>Settings per device</h3>
+            <p>The list shows every paired Bluetooth audio device and whether it is connected right now. You can exclude any of them from monitoring or give it its own idle timeout instead of the global one.</p>
+            <ul>
+              <li>The <strong>Monitor</strong> switch decides whether the app touches that device at all.</li>
+              <li><strong>Custom timeout</strong> sets a separate time for one device, say 20 minutes for the kitchen speaker.</li>
+              <li>With several devices connected, the countdown uses the shortest of their timeouts.</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="Devices tab: Bluetooth devices">
+            <picture>
+              <source srcset="../assets/screenshots/preferences-devices-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="../assets/screenshots/preferences-devices-light.webp" width="632" height="564" loading="lazy" alt="Devices tab: Studio Headphones and Kitchen Speaker connected, Running Earbuds and Office Headset offline; Kitchen Speaker has a custom 20-minute timeout and Office Headset is not monitored">
+            </picture>
+          </button>
+        </div>
+
+        <div class="feature">
+          <div class="feature-text">
+            <h3>App whitelist</h3>
+            <p>Zoom or Teams calls have long quiet stretches, and your headphones should stay put. Add those apps to the whitelist: while any of them is running, the countdown doesn’t start.</p>
+            <ul>
+              <li>Pick apps from the ones currently running (<strong>Add running app…</strong>).</li>
+              <li>If a whitelisted app launches during the countdown, the disconnect is called off.</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="Apps tab: whitelist">
+            <picture>
+              <source srcset="../assets/screenshots/preferences-apps-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="../assets/screenshots/preferences-apps-light.webp" width="632" height="564" loading="lazy" alt="Apps tab: whitelist with zoom.us, Microsoft Teams and FaceTime, and the Add running app button">
+            </picture>
+          </button>
+        </div>
+
+        <div class="feature reverse">
+          <div class="feature-text">
+            <h3>Sleep, launch at login and logs</h3>
+            <p>The app reacts when your Mac sleeps and can start at login. Everything it does goes into a log file.</p>
+            <ul>
+              <li><strong>Pause timer when system sleeps</strong>: the countdown stops while the Mac sleeps and starts over on wake (on by default).</li>
+              <li><strong>Disconnect immediately on system sleep</strong>: disconnects devices the moment the Mac goes to sleep.</li>
+              <li><strong>Launch at login</strong>: starts the app at login via <code>SMAppService</code>.</li>
+              <li>Log at <code>~/Library/Logs/BTAudioIdleDisconnect.log</code>, rotated at 1&nbsp;MB.</li>
+            </ul>
+          </div>
+          <button type="button" class="shot-button" data-caption="About tab: log file and author">
+            <picture>
+              <source srcset="../assets/screenshots/preferences-about-dark.webp" media="(prefers-color-scheme: dark)">
+              <img src="../assets/screenshots/preferences-about-light.webp" width="632" height="564" loading="lazy" alt="About tab: BT Audio Idle Disconnect, the log file path with an Open log file button, and developer details">
+            </picture>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section" aria-labelledby="how-title">
+      <div class="container">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">Four steps, then forget about it</h2>
+        <ol class="steps">
+          <li>
+            <h3>Install</h3>
+            <p>Download the DMG and drag the app into Applications. On first launch, right-click it and choose <strong>Open</strong>.</p>
+          </li>
+          <li>
+            <h3>Allow notifications</h3>
+            <p>Without them the app still disconnects, but you won’t get the warning with its Cancel button.</p>
+          </li>
+          <li>
+            <h3>Set times and devices</h3>
+            <p>Open <strong>Preferences…</strong> from the menu bar icon and choose the idle timeout, devices and whitelisted apps.</p>
+          </li>
+          <li>
+            <h3>Listen as usual</h3>
+            <p>While music plays, nothing happens. When it stops, a countdown appears next to the icon, followed by the warning and the disconnect.</p>
+          </li>
+        </ol>
+
+        <div class="flow">
+          <div class="card">
+            <table class="flow-table">
+              <caption>What the app does, and when</caption>
+              <tbody>
+                <tr><th scope="row">Something is playing</th><td>No countdown.</td></tr>
+                <tr><th scope="row">It goes quiet</th><td>The countdown starts and the menu bar shows the time left, e.g. 9:42.</td></tr>
+                <tr><th scope="row">Time is up</th><td>A notification appears and the icon counts down in seconds.</td></tr>
+                <tr><th scope="row">You click Cancel</th><td>The disconnect is pushed back by the Snooze on cancel time.</td></tr>
+                <tr><th scope="row">The warning runs out</th><td>Monitored devices are disconnected.</td></tr>
+                <tr><th scope="row">Mac sleeps / wakes</th><td>The countdown stops (or devices are disconnected, if you chose that) and starts over on wake.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>The menu bar menu</h3>
+            <ul class="menu-list">
+              <li><span>Status</span><span>playing / idle / idle — 9:42 remaining</span></li>
+              <li><span>Connected</span><span>connected devices, unmonitored ones marked</span></li>
+              <li><span>Cancel timer (snooze)</span><span>pushes the disconnect back</span></li>
+              <li><span>Disconnect now</span><span><kbd>⌘D</kbd></span></li>
+              <li><span>Preferences…</span><span><kbd>⌘,</kbd></span></li>
+              <li><span>Open Log File</span><span>opens the log</span></li>
+              <li><span>Quit</span><span><kbd>⌘Q</kbd></span></li>
+            </ul>
+            <div class="notif" role="note">
+              <strong>The pre-disconnect notification (text from the app)</strong>
+              Title: “Disconnecting Bluetooth audio”<br>
+              Body: “Studio Headphones will be disconnected in 30s. Tap Cancel to keep connected.”<br>
+              Button: <strong style="display:inline">Cancel</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="section section-alt" aria-labelledby="gallery-title">
+      <div class="container">
+        <p class="eyebrow">Gallery</p>
+        <h2 id="gallery-title">Screenshots</h2>
+        <p class="section-intro">Click a screenshot to enlarge it. They come from the running app; device names and addresses are made up. Light or dark versions follow your system theme.</p>
+        <ul class="gallery">
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="General: timing and behavior">
+              <picture>
+                <source srcset="../assets/screenshots/preferences-general-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="../assets/screenshots/preferences-general-light.webp" width="632" height="564" loading="lazy" alt="General tab with timing sliders and behavior switches">
+              </picture>
+            </button>
+            <figcaption>General: timing and behavior</figcaption>
+          </figure></li>
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="Devices: Bluetooth devices">
+              <picture>
+                <source srcset="../assets/screenshots/preferences-devices-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="../assets/screenshots/preferences-devices-light.webp" width="632" height="564" loading="lazy" alt="Devices tab with four paired audio devices">
+              </picture>
+            </button>
+            <figcaption>Devices: Bluetooth devices</figcaption>
+          </figure></li>
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="Apps: whitelist">
+              <picture>
+                <source srcset="../assets/screenshots/preferences-apps-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="../assets/screenshots/preferences-apps-light.webp" width="632" height="564" loading="lazy" alt="Apps tab with three whitelisted apps">
+              </picture>
+            </button>
+            <figcaption>Apps: whitelist</figcaption>
+          </figure></li>
+          <li><figure>
+            <button type="button" class="shot-button" data-caption="About: log and author">
+              <picture>
+                <source srcset="../assets/screenshots/preferences-about-dark.webp" media="(prefers-color-scheme: dark)">
+                <img src="../assets/screenshots/preferences-about-light.webp" width="632" height="564" loading="lazy" alt="About tab with the log file path and developer details">
+              </picture>
+            </button>
+            <figcaption>About: log and author</figcaption>
+          </figure></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="install" class="section" aria-labelledby="install-title">
+      <div class="container">
+        <p class="eyebrow">Install</p>
+        <h2 id="install-title">Download the app or build it yourself</h2>
+        <div class="install-grid">
+          <div class="card">
+            <h3>Ready-made DMG</h3>
+            <ol>
+              <li>Download <a href="https://github.com/jash90/bt-audio-idle-disconnect/releases/latest">the latest version from GitHub Releases</a>.</li>
+              <li>Open the DMG and drag <strong>BT Audio Idle.app</strong> into Applications.</li>
+              <li>On first launch, right-click the app and choose <strong>Open</strong>. It is ad-hoc signed, so Gatekeeper will ask.</li>
+              <li>Allow notifications and, if you like, turn on <strong>Launch at login</strong>.</li>
+            </ol>
+            <p class="muted" style="margin-top:1rem">Requirements: macOS 13 or later and a paired Bluetooth audio device.</p>
+          </div>
+          <div class="card">
+            <h3>From source</h3>
+            <p class="muted">You need Xcode 15+ or Swift 5.9+. The script builds a release binary, assembles the <code>.app</code> bundle and ad-hoc signs it.</p>
+<pre><code>git clone https://github.com/jash90/bt-audio-idle-disconnect.git
+cd bt-audio-idle-disconnect
+./scripts/build-app.sh
+mv "build/BT Audio Idle.app" /Applications/
+open "/Applications/BT Audio Idle.app"</code></pre>
+            <details>
+              <summary>Tech stack and files</summary>
+              <ul class="stack">
+                <li>Swift 5.9 · SwiftPM</li><li>AppKit (NSStatusItem)</li><li>SwiftUI</li><li>CoreAudio</li>
+                <li>IOBluetooth</li><li>UserNotifications</li><li>ServiceManagement</li>
+              </ul>
+              <p class="muted">Settings: <code>~/Library/Application Support/BTAudioIdleDisconnect/settings.json</code>. Log: <code>~/Library/Logs/BTAudioIdleDisconnect.log</code>. <code>./scripts/build-dmg.sh</code> builds the DMG.</p>
+            </details>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1.25rem">
+          <h3>Good to know</h3>
+          <ul class="limits">
+            <li><strong>Not on the App Store.</strong> Disconnecting relies on the legacy <code>IOBluetooth</code> API, which the App Store sandbox doesn’t allow, so the app is distributed directly.</li>
+            <li><strong>Default output only.</strong> An app that plays straight to a non-default device can slip past detection.</li>
+            <li><strong>The whitelist only checks whether an app is running.</strong> It can’t tell whether that app is actually playing audio.</li>
+            <li><strong>Auto-reconnect.</strong> Some devices reconnect on their own. They are dropped again after the next quiet period, no sooner than the Reconnect cooldown.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p><strong>BT Audio Idle</strong> · by Bartłomiej Zimny · <a href="https://raccoonsoftware.pl">raccoonsoftware.pl</a></p>
+        <p>Contact: <a href="mailto:bartlomiejzimny@outlook.com">bartlomiejzimny@outlook.com</a></p>
+        <p>The source code is public. The repository has no license file.</p>
+      </div>
+      <ul>
+        <li><a href="https://github.com/jash90/bt-audio-idle-disconnect">GitHub repository</a></li>
+        <li><a href="https://github.com/jash90/bt-audio-idle-disconnect/releases">Releases</a></li>
+        <li><a href="../" hreflang="pl" lang="pl">Wersja polska</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Enlarged screenshot">
+    <button type="button" class="lightbox-close" aria-label="Close">×</button>
+    <img alt="">
+    <p></p>
+  </dialog>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
