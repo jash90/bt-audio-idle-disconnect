@@ -43,6 +43,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         sleepWakeMonitor.onSleep = { [weak self] in self?.idleController.systemWillSleep() }
         sleepWakeMonitor.onWake  = { [weak self] in self?.idleController.systemDidWake() }
         sleepWakeMonitor.start()
+
+        notifications.onUpdateNotificationTapped = { [weak self] in
+            self?.menuBar.showUpdates()
+        }
+        UpdateChecker.shared.startAutomaticChecks()
     }
 
     func applicationWillTerminate(_ notification: Notification) {

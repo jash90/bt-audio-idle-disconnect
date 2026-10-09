@@ -13,6 +13,7 @@ Menu bar app dla macOS, która rozłącza sparowane słuchawki / głośniki Blue
 - **Sleep / Wake** — pauzuje timer przy uśpieniu (opcjonalnie: natychmiastowy disconnect)
 - **Logi** w `~/Library/Logs/BTAudioIdleDisconnect.log` (rotacja przy 1 MB)
 - **Preferencje** (SwiftUI, 4 taby): General / Devices / Apps / About
+- **Aktualizacje z GitHub Releases** — *Check for Updates…* w menu i w zakładce About: wykrywa nowszą wersję, pokazuje release notes, pobiera DMG, weryfikuje SHA-256 i podmienia aplikację z restartem. Opcjonalne automatyczne sprawdzanie raz na dobę (domyślnie włączone)
 
 ## Wymagania
 
@@ -51,6 +52,7 @@ SleepWakeMonitor            NSWorkspace.willSleep / didWake
 NotificationManager         UNUserNotificationCenter + Cancel action
 LoginItemManager            SMAppService.mainApp
 SettingsStore               Codable JSON → Application Support, @Published
+UpdateChecker               GitHub Releases: check → download → SHA-256 → hdiutil → swap + relaunch
 
 IdleController              orkiestracja: idle → grace → disconnect, snooze, sleep
 MenuBarController           NSStatusItem + dynamiczne menu z countdownem
@@ -70,6 +72,22 @@ sleep           → pause | disconnect (per ustawienie)
 wake            → ponownie evaluate
 ```
 
+## Wydanie nowej wersji (release)
+
+Updater w aplikacji czyta `https://api.github.com/repos/jash90/bt-audio-idle-disconnect/releases/latest`, więc każde wydanie musi spełniać:
+
+1. `CFBundleShortVersionString` w `Resources/Info.plist` podbity (np. `1.2.0`), `CFBundleVersion` +1.
+2. Tag `vX.Y.Z` **równy** `CFBundleShortVersionString` — updater odrzuca DMG, w którym wersja aplikacji nie zgadza się z tagiem.
+3. Dokładnie jeden plik `.dmg` jako asset, zbudowany przez `./scripts/build-dmg.sh`. GitHub sam dodaje do assetu digest SHA-256 — bez niego aktualizacja nie zostanie zainstalowana automatycznie.
+4. Release nie może być draftem ani pre-release (`/latest` je pomija).
+
+```bash
+./scripts/build-dmg.sh
+gh release create v1.2.0 "build/BT Audio Idle 1.2.0.dmg" --title "v1.2.0" --notes-file notes.md
+```
+
+Jak działa instalacja: DMG trafia do `~/Library/Caches/BTAudioIdleDisconnect/Updates/`, po weryfikacji SHA-256 jest montowany (`hdiutil`), sprawdzane są bundle id, wersja i `codesign --verify`, a aplikacja jest kopiowana do `staged/`. Następnie odłączony skrypt `install.sh` czeka na zamknięcie aplikacji, podmienia bundle (z przywróceniem starej wersji przy błędzie) i uruchamia ją ponownie. Wpisy `installer:` lądują w zwykłym logu. Jeśli katalog aplikacji nie jest zapisywalny, updater otwiera zweryfikowany DMG do ręcznego przeciągnięcia.
+
 ## Ograniczenia
 
 - **`IOBluetooth.closeConnection()`** jest publiczne, ale legacy. Apple nie oferuje sandbox-friendly alternatywy → **w App Store nie przejdzie**. Dystrybucja: direct download + notarization (lub ad-hoc lokalnie).
@@ -77,11 +95,11 @@ wake            → ponownie evaluate
 - **Auto-reconnect macOS**: niektóre urządzenia / wersje systemu próbują reconnectować po rozłączeniu. Jeśli to robi problem — w *Bluetooth → ⓘ przy urządzeniu* wyłącz auto-connect (jeśli twoje urządzenie to wspiera), albo apka rozłączy ponownie po kolejnym timeoucie.
 - Wykrywa audio tylko na **domyślnym wyjściu**. App piszący bezpośrednio do innego urządzenia może uciec wykrywaniu.
 - Whitelist sprawdza tylko **czy proces apki istnieje** (NSWorkspace) — nie wie, czy apka faktycznie używa audio.
+- **Aktualizacje**: wersje ≤ 1.1.0 nie mają updatera — na 1.2.0 trzeba przejść raz ręcznie. Przy podpisie ad-hoc tożsamość aplikacji to hash binarki, więc po aktualizacji macOS może ponownie zapytać o powiadomienia / Bluetooth, a *Launch at login* może wymagać ponownego włączenia. SHA-256 z GitHuba chroni przed uszkodzonym pobraniem, ale nie potwierdza autora (digest pochodzi z tego samego konta) — pełne uwierzytelnienie dałby dopiero Developer ID + notaryzacja.
 
 ## Co dalej (poza tym scope)
 
 - Ikona aplikacji (.icns) + custom symbole
 - Statystyki rozłączeń (history)
 - Reguły wg lokalizacji / sieci Wi-Fi
-- Sparkle / auto-update
 - Tłumaczenia PL/EN

@@ -1,7 +1,17 @@
 import AppKit
 import SwiftUI
 
+enum SettingsTab: Hashable {
+    case general, devices, apps, about
+}
+
+final class SettingsTabSelection: ObservableObject {
+    @Published var tab: SettingsTab = .general
+}
+
 final class SettingsWindowController: NSWindowController, NSWindowDelegate {
+    private let selection = SettingsTabSelection()
+
     init(
         settings: SettingsStore,
         bluetoothManager: BluetoothManager,
@@ -10,7 +20,8 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         let view = SettingsView(
             settings: settings,
             bluetoothManager: bluetoothManager,
-            idleController: idleController
+            idleController: idleController,
+            selection: selection
         )
         let hosting = NSHostingController(rootView: view)
         let window = NSWindow(contentViewController: hosting)
@@ -23,27 +34,36 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func selectTab(_ tab: SettingsTab) {
+        selection.tab = tab
+    }
 }
 
 struct SettingsView: View {
     @ObservedObject var settings: SettingsStore
     let bluetoothManager: BluetoothManager
     let idleController: IdleController
+    @ObservedObject var selection: SettingsTabSelection
 
     var body: some View {
-        TabView {
+        TabView(selection: $selection.tab) {
             GeneralTab(settings: settings)
                 .tabItem { Label("General", systemImage: "gearshape") }
+                .tag(SettingsTab.general)
             DevicesTab(
                 settings: settings,
                 bluetoothManager: bluetoothManager,
                 idleController: idleController
             )
                 .tabItem { Label("Devices", systemImage: "headphones") }
+                .tag(SettingsTab.devices)
             AppsTab(settings: settings)
                 .tabItem { Label("Apps", systemImage: "app.badge") }
+                .tag(SettingsTab.apps)
             AboutTab()
                 .tabItem { Label("About", systemImage: "info.circle") }
+                .tag(SettingsTab.about)
         }
         .frame(minWidth: 600, minHeight: 500)
         .padding()
@@ -125,7 +145,7 @@ private struct GeneralTab: View {
                     set: { settings.settings.disconnectOnSleep = $0 }
                 ))
             }
-            Section("Launch") {
+            Section("Launch & Updates") {
                 Toggle("Launch at login", isOn: Binding(
                     get: { loginAtStart },
                     set: { newValue in
@@ -135,9 +155,19 @@ private struct GeneralTab: View {
                     }
                 ))
                 Text("Status: \(loginStatus)").font(.caption).foregroundColor(.secondary)
+                Toggle("Check for updates automatically", isOn: Binding(
+                    get: { settings.settings.autoCheckForUpdates },
+                    set: { settings.settings.autoCheckForUpdates = $0 }
+                ))
+                Text(lastCheckedText).font(.caption).foregroundColor(.secondary)
             }
         }
         .formStyle(.grouped)
+    }
+
+    private var lastCheckedText: String {
+        guard let last = settings.settings.lastUpdateCheck else { return "Last checked: never" }
+        return "Last checked: \(last.formatted(date: .abbreviated, time: .shortened))"
     }
 }
 
@@ -397,15 +427,29 @@ private struct AddAppSheet: View {
 
 private struct AboutTab: View {
     var body: some View {
+        ScrollView {
+            content
+                .padding(24)
+                .frame(maxWidth: .infinity)
+        }
+    }
+
+    private var content: some View {
         VStack(spacing: 12) {
             Image(systemName: "headphones")
                 .font(.system(size: 48))
                 .foregroundColor(.accentColor)
             Text("BT Audio Idle Disconnect").font(.title2.weight(.semibold))
+            Text("Version \(UpdateChecker.currentVersionString) (build \(UpdateChecker.currentBuildString))")
+                .font(.callout)
+                .foregroundColor(.secondary)
+                .textSelection(.enabled)
             Text("Disconnects paired Bluetooth audio devices after a configurable idle period.")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
+            Divider().padding(.vertical, 8)
+            UpdatesSection(updater: UpdateChecker.shared)
             Divider().padding(.vertical, 8)
             VStack(alignment: .leading, spacing: 4) {
                 Text("Log file:").font(.caption).foregroundColor(.secondary)
@@ -426,7 +470,85 @@ private struct AboutTab: View {
                     .font(.callout)
             }
         }
-        .padding(24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct UpdatesSection: View {
+    @ObservedObject var updater: UpdateChecker
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Text("Updates").font(.caption).foregroundColor(.secondary)
+            switch updater.state {
+            case .idle:
+                checkButton("Check for Updates")
+            case .checking:
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text("Checking for updates…")
+                }
+            case .upToDate:
+                Text("You're up to date.").font(.callout)
+                checkButton("Check Again")
+            case .available(let release):
+                available(release)
+            case .downloading(let progress):
+                ProgressView(value: progress) {
+                    Text("Downloading update… \(Int(progress * 100))%").font(.callout)
+                }
+                .frame(maxWidth: 320)
+            case .installing:
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text("Installing — the app will relaunch.")
+                }
+            case .manualInstallRequired:
+                Text("The app's folder isn't writable, so the update was verified and its disk image opened. Drag BT Audio Idle onto Applications to finish.")
+                    .font(.callout)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            case .failed(let message):
+                Text(message)
+                    .font(.callout)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                checkButton("Try Again")
+            }
+        }
+    }
+
+    private func checkButton(_ title: String) -> some View {
+        Button(title) { updater.check(userInitiated: true) }
+    }
+
+    @ViewBuilder
+    private func available(_ release: Release) -> some View {
+        Text("Version \(release.displayVersion) is available — you have \(UpdateChecker.currentVersionString).")
+            .font(.callout.weight(.medium))
+        if let notes = release.body?.trimmingCharacters(in: .whitespacesAndNewlines), !notes.isEmpty {
+            ScrollView {
+                Text(Self.markdown(notes))
+                    .font(.callout)
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(8)
+            }
+            .frame(height: 140)
+            .background(RoundedRectangle(cornerRadius: 6).fill(Color(nsColor: .textBackgroundColor)))
+            .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(nsColor: .separatorColor)))
+            .padding(.horizontal)
+        }
+        HStack(spacing: 12) {
+            Button("Download & Install") { updater.downloadAndInstall() }
+                .keyboardShortcut(.defaultAction)
+                .disabled(release.dmgAsset == nil)
+            Link("View on GitHub", destination: release.htmlURL)
+        }
+    }
+
+    private static func markdown(_ text: String) -> AttributedString {
+        let options = AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+        return (try? AttributedString(markdown: text, options: options)) ?? AttributedString(text)
     }
 }

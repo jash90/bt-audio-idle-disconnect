@@ -26,6 +26,9 @@ struct GlobalSettings: Codable, Equatable {
     var reconnectCooldownSeconds: TimeInterval = 60
     var pauseOnSleep: Bool = true
     var disconnectOnSleep: Bool = false
+    var autoCheckForUpdates: Bool = true
+    var lastUpdateCheck: Date? = nil
+    var lastNotifiedUpdateVersion: String? = nil
 }
 
 extension GlobalSettings {
@@ -46,6 +49,9 @@ extension GlobalSettings {
         reconnectCooldownSeconds = try c.decodeIfPresent(TimeInterval.self, forKey: .reconnectCooldownSeconds) ?? reconnectCooldownSeconds
         pauseOnSleep = try c.decodeIfPresent(Bool.self, forKey: .pauseOnSleep) ?? pauseOnSleep
         disconnectOnSleep = try c.decodeIfPresent(Bool.self, forKey: .disconnectOnSleep) ?? disconnectOnSleep
+        autoCheckForUpdates = try c.decodeIfPresent(Bool.self, forKey: .autoCheckForUpdates) ?? autoCheckForUpdates
+        lastUpdateCheck = try c.decodeIfPresent(Date.self, forKey: .lastUpdateCheck)
+        lastNotifiedUpdateVersion = try c.decodeIfPresent(String.self, forKey: .lastNotifiedUpdateVersion)
     }
 }
 

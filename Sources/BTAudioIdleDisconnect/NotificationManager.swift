@@ -5,11 +5,13 @@ final class NotificationManager: NSObject {
     static let shared = NotificationManager()
 
     var onCancelTapped: (() -> Void)?
+    var onUpdateNotificationTapped: (() -> Void)?
 
     private let center = UNUserNotificationCenter.current()
     private let categoryId = "BTAID.PRE_DISCONNECT"
     private let cancelActionId = "BTAID.CANCEL_DISCONNECT"
     private let notificationId = "btaid.preDisconnect"
+    private let updateNotificationId = "btaid.update"
 
     private override init() {
         super.init()
@@ -63,6 +65,24 @@ final class NotificationManager: NSObject {
         }
     }
 
+    /// No sound and no category: it must never carry the pre-disconnect Cancel action.
+    func sendUpdateAvailable(version: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "BT Audio Idle \(version) is available"
+        content.body = "Click to see what's new and install it."
+
+        let request = UNNotificationRequest(
+            identifier: updateNotificationId,
+            content: content,
+            trigger: nil
+        )
+        center.add(request) { error in
+            if let error = error {
+                AppLogger.error("Update notification add failed: \(error)")
+            }
+        }
+    }
+
     func clearPending() {
         center.removeDeliveredNotifications(withIdentifiers: [notificationId])
         center.removePendingNotificationRequests(withIdentifiers: [notificationId])
@@ -83,7 +103,12 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        if response.actionIdentifier == cancelActionId {
+        if response.notification.request.identifier == updateNotificationId {
+            AppLogger.info("User tapped the update notification")
+            DispatchQueue.main.async { [weak self] in
+                self?.onUpdateNotificationTapped?()
+            }
+        } else if response.actionIdentifier == cancelActionId {
             AppLogger.info("User tapped Cancel in pre-disconnect notification")
             DispatchQueue.main.async { [weak self] in
                 self?.onCancelTapped?()

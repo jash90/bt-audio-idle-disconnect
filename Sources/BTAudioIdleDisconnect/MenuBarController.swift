@@ -8,6 +8,8 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     private let menu = NSMenu()
     private var statusLineItem: NSMenuItem?
+    private var updateItem: NSMenuItem?
+    private let updater = UpdateChecker.shared
     private var settingsWindowController: SettingsWindowController?
     private var refreshTimer: Timer?
 
@@ -46,6 +48,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private func tick() {
         configureButton()
         statusLineItem?.title = statusText()
+        if let updateItem { configureUpdateItem(updateItem) }
     }
 
     /// Full structural rebuild — runs right before the menu is shown so the
@@ -130,6 +133,12 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
         menu.addItem(.separator())
 
+        let update = NSMenuItem(title: "", action: #selector(showUpdates), keyEquivalent: "")
+        update.target = self
+        configureUpdateItem(update)
+        updateItem = update
+        menu.addItem(update)
+
         let prefsItem = NSMenuItem(title: "Preferences…", action: #selector(showPreferences), keyEquivalent: ",")
         prefsItem.target = self
         menu.addItem(prefsItem)
@@ -143,6 +152,26 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         let quitItem = NSMenuItem(title: "Quit", action: #selector(quit), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
+    }
+
+    private func configureUpdateItem(_ item: NSMenuItem) {
+        switch updater.state {
+        case .available(let release):
+            item.title = "Install Update \(release.displayVersion)…"
+            item.isEnabled = true
+        case .checking:
+            item.title = "Checking for Updates…"
+            item.isEnabled = false
+        case .downloading(let progress):
+            item.title = "Downloading Update… \(Int(progress * 100))%"
+            item.isEnabled = false
+        case .installing:
+            item.title = "Installing Update…"
+            item.isEnabled = false
+        default:
+            item.title = "Check for Updates…"
+            item.isEnabled = true
+        }
     }
 
     private func disabled(_ title: String) -> NSMenuItem {
@@ -160,7 +189,19 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     }
 
     @objc private func showPreferences() {
+        openPreferences(tab: nil)
+    }
+
+    /// Opens Preferences on the About tab; starts a check unless an update is already known.
+    @objc func showUpdates() {
+        openPreferences(tab: .about)
+        if case .available = updater.state { return }
+        updater.check(userInitiated: true)
+    }
+
+    private func openPreferences(tab: SettingsTab?) {
         if let wc = settingsWindowController, wc.window != nil {
+            if let tab { wc.selectTab(tab) }
             wc.window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
             return
@@ -170,6 +211,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
             bluetoothManager: bluetoothManager,
             idleController: idleController
         )
+        if let tab { wc.selectTab(tab) }
         settingsWindowController = wc
         wc.showWindow(nil)
         NSApp.activate(ignoringOtherApps: true)

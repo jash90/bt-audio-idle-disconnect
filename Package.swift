@@ -16,6 +16,11 @@ let package = Package(
                 .linkedFramework("UserNotifications"),
                 .linkedFramework("ServiceManagement"),
             ]
-        )
+        ),
+        .testTarget(
+            name: "BTAudioIdleDisconnectTests",
+            dependencies: ["BTAudioIdleDisconnect"],
+            path: "Tests/BTAudioIdleDisconnectTests"
+        ),
     ]
 )
