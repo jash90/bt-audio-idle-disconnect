@@ -20,6 +20,17 @@ final class LoginItemManager {
         }
     }
 
+    /// Same as `statusDescription`, translated for the UI (the English one goes to the log).
+    var localizedStatusDescription: String {
+        switch SMAppService.mainApp.status {
+        case .notRegistered: return L10n.tr("not registered")
+        case .enabled: return L10n.tr("enabled")
+        case .requiresApproval: return L10n.tr("requires approval in System Settings")
+        case .notFound: return L10n.tr("not found")
+        @unknown default: return L10n.tr("unknown")
+        }
+    }
+
     @discardableResult
     func setEnabled(_ enabled: Bool) -> Bool {
         do {

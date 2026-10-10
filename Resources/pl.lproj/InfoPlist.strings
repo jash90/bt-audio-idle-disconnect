@@ -1,0 +1,2 @@
+/* Polish Info.plist strings (permission prompts shown by macOS). */
+"NSBluetoothAlwaysUsageDescription" = "BT Audio Idle potrzebuje dostępu do Bluetooth, aby wykrywać i rozłączać bezczynne sparowane urządzenia audio.";

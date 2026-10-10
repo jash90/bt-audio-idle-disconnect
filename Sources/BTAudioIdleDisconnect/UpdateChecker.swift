@@ -92,17 +92,17 @@ enum UpdateError: LocalizedError, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .network(let m): return "Couldn't reach GitHub: \(m)"
-        case .rateLimited: return "GitHub is rate-limiting update checks. Try again later."
-        case .noRelease: return "No published release was found."
-        case .badResponse(let code): return "GitHub answered with HTTP \(code)."
-        case .invalidData: return "GitHub sent a response the app couldn't read."
-        case .noInstaller: return "This release has no .dmg to install."
-        case .noChecksum: return "This release has no SHA-256 checksum, so it won't be installed automatically."
-        case .checksumMismatch: return "The download didn't match its SHA-256 checksum and was discarded."
-        case .notPackaged: return "Updates can only be installed into the packaged .app."
-        case .invalidBundle(let m): return "The downloaded app failed verification: \(m)"
-        case .commandFailed(let m): return "Installing failed: \(m)"
+        case .network(let m): return L10n.tr("Couldn't reach GitHub: %@", m)
+        case .rateLimited: return L10n.tr("GitHub is rate-limiting update checks. Try again later.")
+        case .noRelease: return L10n.tr("No published release was found.")
+        case .badResponse(let code): return L10n.tr("GitHub answered with HTTP %ld.", code)
+        case .invalidData: return L10n.tr("GitHub sent a response the app couldn't read.")
+        case .noInstaller: return L10n.tr("This release has no .dmg to install.")
+        case .noChecksum: return L10n.tr("This release has no SHA-256 checksum, so it won't be installed automatically.")
+        case .checksumMismatch: return L10n.tr("The download didn't match its SHA-256 checksum and was discarded.")
+        case .notPackaged: return L10n.tr("Updates can only be installed into the packaged .app.")
+        case .invalidBundle(let m): return L10n.tr("The downloaded app failed verification: %@", m)
+        case .commandFailed(let m): return L10n.tr("Installing failed: %@", m)
         }
     }
 }
