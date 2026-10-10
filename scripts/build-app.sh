@@ -23,8 +23,16 @@ if [ -f Resources/AppIcon.icns ]; then
     cp Resources/AppIcon.icns "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
 fi
 
-echo "→ Ad-hoc signing (required for notifications, SMAppService)"
-codesign --force --deep --options runtime --sign - "$APP_BUNDLE"
+# Ad-hoc by default (ADR-001). scripts/release.sh --developer-id sets CODESIGN_IDENTITY to a
+# Developer ID certificate (SHA-1); a real identity also gets a secure timestamp for notarization.
+IDENTITY="${CODESIGN_IDENTITY:--}"
+if [ "$IDENTITY" = "-" ]; then
+    echo "→ Ad-hoc signing (required for notifications, SMAppService)"
+    codesign --force --deep --options runtime --sign - "$APP_BUNDLE"
+else
+    echo "→ Signing with identity $IDENTITY (hardened runtime + timestamp)"
+    codesign --force --deep --options runtime --timestamp --sign "$IDENTITY" "$APP_BUNDLE"
+fi
 
 echo
 echo "✓ Built $APP_BUNDLE"
