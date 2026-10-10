@@ -22,7 +22,7 @@ final class NotificationManager: NSObject {
 
         let cancelAction = UNNotificationAction(
             identifier: cancelActionId,
-            title: "Cancel",
+            title: L10n.tr("Cancel"),
             options: []
         )
         let category = UNNotificationCategory(
@@ -40,10 +40,12 @@ final class NotificationManager: NSObject {
 
     func sendPreDisconnect(deviceNames: [String], graceSeconds: TimeInterval, withSound: Bool) {
         let content = UNMutableNotificationContent()
-        content.title = "Disconnecting Bluetooth audio"
-        let joined = deviceNames.joined(separator: ", ")
-        let prefix = deviceNames.isEmpty ? "Devices" : joined
-        content.body = "\(prefix) will be disconnected in \(Int(graceSeconds))s. Tap Cancel to keep connected."
+        content.title = L10n.tr("Disconnecting Bluetooth audio")
+        let seconds = Int(graceSeconds)
+        content.body = deviceNames.isEmpty
+            ? L10n.tr("Devices will be disconnected in %lds. Tap Cancel to keep them connected.", seconds)
+            : L10n.tr("%1$@ will be disconnected in %2$lds. Tap Cancel to keep connected.",
+                      deviceNames.joined(separator: ", "), seconds)
 
         // An alert sound opens the default output device, which the idle detector reads as
         // playback — the notification would cancel the very disconnect it announces.
@@ -68,8 +70,8 @@ final class NotificationManager: NSObject {
     /// No sound and no category: it must never carry the pre-disconnect Cancel action.
     func sendUpdateAvailable(version: String) {
         let content = UNMutableNotificationContent()
-        content.title = "BT Audio Idle \(version) is available"
-        content.body = "Click to see what's new and install it."
+        content.title = L10n.tr("BT Audio Idle %@ is available", version)
+        content.body = L10n.tr("Click to see what's new and install it.")
 
         let request = UNNotificationRequest(
             identifier: updateNotificationId,

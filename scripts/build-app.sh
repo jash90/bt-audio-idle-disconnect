@@ -23,6 +23,11 @@ if [ -f Resources/AppIcon.icns ]; then
     cp Resources/AppIcon.icns "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
 fi
 
+# Localizations (en = development region, pl): Localizable.strings + InfoPlist.strings.
+for lproj in Resources/*.lproj; do
+    if [ -d "$lproj" ]; then cp -R "$lproj" "$APP_BUNDLE/Contents/Resources/"; fi
+done
+
 # Ad-hoc by default (ADR-001). scripts/release.sh --developer-id sets CODESIGN_IDENTITY to a
 # Developer ID certificate (SHA-1); a real identity also gets a secure timestamp for notarization.
 IDENTITY="${CODESIGN_IDENTITY:--}"

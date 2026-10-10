@@ -86,17 +86,17 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
     private func statusText() -> String {
         if idleController.isAudioPlaying {
-            return "Status: playing"
+            return L10n.tr("Status: playing")
         } else if idleController.inGracePeriod {
             let remaining = Int(idleController.remainingSecondsForUI())
-            return "Status: disconnecting in \(remaining)s"
+            return L10n.tr("Status: disconnecting in %lds", remaining)
         } else if idleController.idleStartedAt != nil {
             let remaining = idleController.remainingSecondsForUI()
             let mins = Int(remaining) / 60
             let secs = Int(remaining) % 60
-            return String(format: "Status: idle — %d:%02d remaining", mins, secs)
+            return L10n.tr("Status: idle — %ld:%02ld remaining", mins, secs)
         } else {
-            return "Status: idle"
+            return L10n.tr("Status: idle")
         }
     }
 
@@ -109,24 +109,24 @@ final class MenuBarController: NSObject, NSMenuDelegate {
 
         let connectedAll = bluetoothManager.connectedAudioDeviceInfos()
         if connectedAll.isEmpty {
-            menu.addItem(disabled("No connected BT audio devices"))
+            menu.addItem(disabled(L10n.tr("No connected BT audio devices")))
         } else {
-            menu.addItem(disabled("Connected:"))
+            menu.addItem(disabled(L10n.tr("Connected:")))
             for device in connectedAll {
                 let monitored = settings.isMonitored(address: device.address)
-                let suffix = monitored ? "" : "  (not monitored)"
+                let suffix = monitored ? "" : "  " + L10n.tr("(not monitored)")
                 menu.addItem(disabled("   • \(device.name)\(suffix)"))
             }
         }
 
         menu.addItem(.separator())
 
-        let cancelItem = NSMenuItem(title: "Cancel timer (snooze)", action: #selector(snooze), keyEquivalent: "")
+        let cancelItem = NSMenuItem(title: L10n.tr("Cancel timer (snooze)"), action: #selector(snooze), keyEquivalent: "")
         cancelItem.target = self
         cancelItem.isEnabled = idleController.idleStartedAt != nil || idleController.inGracePeriod
         menu.addItem(cancelItem)
 
-        let disconnectItem = NSMenuItem(title: "Disconnect now", action: #selector(disconnectNow), keyEquivalent: "d")
+        let disconnectItem = NSMenuItem(title: L10n.tr("Disconnect now"), action: #selector(disconnectNow), keyEquivalent: "d")
         disconnectItem.target = self
         disconnectItem.isEnabled = !connectedAll.isEmpty
         menu.addItem(disconnectItem)
@@ -139,17 +139,17 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         updateItem = update
         menu.addItem(update)
 
-        let prefsItem = NSMenuItem(title: "Preferences…", action: #selector(showPreferences), keyEquivalent: ",")
+        let prefsItem = NSMenuItem(title: L10n.tr("Preferences…"), action: #selector(showPreferences), keyEquivalent: ",")
         prefsItem.target = self
         menu.addItem(prefsItem)
 
-        let logsItem = NSMenuItem(title: "Open Log File", action: #selector(openLogs), keyEquivalent: "")
+        let logsItem = NSMenuItem(title: L10n.tr("Open Log File"), action: #selector(openLogs), keyEquivalent: "")
         logsItem.target = self
         menu.addItem(logsItem)
 
         menu.addItem(.separator())
 
-        let quitItem = NSMenuItem(title: "Quit", action: #selector(quit), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: L10n.tr("Quit"), action: #selector(quit), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
     }
@@ -157,19 +157,19 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private func configureUpdateItem(_ item: NSMenuItem) {
         switch updater.state {
         case .available(let release):
-            item.title = "Install Update \(release.displayVersion)…"
+            item.title = L10n.tr("Install Update %@…", release.displayVersion)
             item.isEnabled = true
         case .checking:
-            item.title = "Checking for Updates…"
+            item.title = L10n.tr("Checking for Updates…")
             item.isEnabled = false
         case .downloading(let progress):
-            item.title = "Downloading Update… \(Int(progress * 100))%"
+            item.title = L10n.tr("Downloading Update… %ld%%", Int(progress * 100))
             item.isEnabled = false
         case .installing:
-            item.title = "Installing Update…"
+            item.title = L10n.tr("Installing Update…")
             item.isEnabled = false
         default:
-            item.title = "Check for Updates…"
+            item.title = L10n.tr("Check for Updates…")
             item.isEnabled = true
         }
     }

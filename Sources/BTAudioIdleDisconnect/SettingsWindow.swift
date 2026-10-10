@@ -25,7 +25,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         )
         let hosting = NSHostingController(rootView: view)
         let window = NSWindow(contentViewController: hosting)
-        window.title = "BT Audio Idle — Preferences"
+        window.title = L10n.tr("BT Audio Idle — Preferences")
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.setContentSize(NSSize(width: 620, height: 520))
         super.init(window: window)
@@ -49,20 +49,20 @@ struct SettingsView: View {
     var body: some View {
         TabView(selection: $selection.tab) {
             GeneralTab(settings: settings)
-                .tabItem { Label("General", systemImage: "gearshape") }
+                .tabItem { Label(L10n.tr("General"), systemImage: "gearshape") }
                 .tag(SettingsTab.general)
             DevicesTab(
                 settings: settings,
                 bluetoothManager: bluetoothManager,
                 idleController: idleController
             )
-                .tabItem { Label("Devices", systemImage: "headphones") }
+                .tabItem { Label(L10n.tr("Devices"), systemImage: "headphones") }
                 .tag(SettingsTab.devices)
             AppsTab(settings: settings)
-                .tabItem { Label("Apps", systemImage: "app.badge") }
+                .tabItem { Label(L10n.tr("Apps"), systemImage: "app.badge") }
                 .tag(SettingsTab.apps)
             AboutTab()
-                .tabItem { Label("About", systemImage: "info.circle") }
+                .tabItem { Label(L10n.tr("About"), systemImage: "info.circle") }
                 .tag(SettingsTab.about)
         }
         .frame(minWidth: 600, minHeight: 500)
@@ -73,89 +73,89 @@ struct SettingsView: View {
 private struct GeneralTab: View {
     @ObservedObject var settings: SettingsStore
     @State private var loginAtStart: Bool = LoginItemManager.shared.isEnabled
-    @State private var loginStatus: String = LoginItemManager.shared.statusDescription
+    @State private var loginStatus: String = LoginItemManager.shared.localizedStatusDescription
 
     var body: some View {
         Form {
-            Section("Timing") {
+            Section(L10n.tr("Timing")) {
                 SliderRow(
-                    title: "Idle timeout",
+                    title: L10n.tr("Idle timeout"),
                     value: Binding(
                         get: { settings.settings.globalTimeoutSeconds / 60 },
                         set: { settings.settings.globalTimeoutSeconds = $0 * 60 }
                     ),
                     range: 1...60, step: 1,
-                    formatter: { "\(Int($0)) min" }
+                    formatter: { L10n.tr("%ld min", Int($0)) }
                 )
                 SliderRow(
-                    title: "Pre-disconnect grace",
+                    title: L10n.tr("Pre-disconnect grace"),
                     value: Binding(
                         get: { settings.settings.preDisconnectGraceSeconds },
                         set: { settings.settings.preDisconnectGraceSeconds = $0 }
                     ),
                     range: 0...120, step: 5,
-                    formatter: { "\(Int($0))s" }
+                    formatter: { L10n.tr("%lds", Int($0)) }
                 )
                 SliderRow(
-                    title: "Snooze on cancel",
+                    title: L10n.tr("Snooze on cancel"),
                     value: Binding(
                         get: { settings.settings.snoozeOnCancelSeconds / 60 },
                         set: { settings.settings.snoozeOnCancelSeconds = $0 * 60 }
                     ),
                     range: 1...60, step: 1,
-                    formatter: { "\(Int($0)) min" }
+                    formatter: { L10n.tr("%ld min", Int($0)) }
                 )
                 SliderRow(
-                    title: "Confirm playback after",
+                    title: L10n.tr("Confirm playback after"),
                     value: Binding(
                         get: { settings.settings.playbackConfirmSeconds },
                         set: { settings.settings.playbackConfirmSeconds = $0 }
                     ),
                     range: 0...15, step: 1,
-                    formatter: { "\(Int($0))s" }
+                    formatter: { L10n.tr("%lds", Int($0)) }
                 )
-                Text("Audio shorter than this counts as a system beep, not playback, and does not reset the idle timer.")
+                Text(L10n.tr("Audio shorter than this counts as a system beep, not playback, and does not reset the idle timer."))
                     .font(.caption).foregroundColor(.secondary)
                 SliderRow(
-                    title: "Reconnect cooldown",
+                    title: L10n.tr("Reconnect cooldown"),
                     value: Binding(
                         get: { settings.settings.reconnectCooldownSeconds },
                         set: { settings.settings.reconnectCooldownSeconds = $0 }
                     ),
                     range: 0...300, step: 30,
-                    formatter: { "\(Int($0))s" }
+                    formatter: { L10n.tr("%lds", Int($0)) }
                 )
             }
-            Section("Behavior") {
-                Toggle("Notify before disconnecting", isOn: Binding(
+            Section(L10n.tr("Behavior")) {
+                Toggle(L10n.tr("Notify before disconnecting"), isOn: Binding(
                     get: { settings.settings.notificationsEnabled },
                     set: { settings.settings.notificationsEnabled = $0 }
                 ))
-                Toggle("Play a sound with that notification", isOn: Binding(
+                Toggle(L10n.tr("Play a sound with that notification"), isOn: Binding(
                     get: { settings.settings.notificationSoundEnabled },
                     set: { settings.settings.notificationSoundEnabled = $0 }
                 ))
                 .disabled(!settings.settings.notificationsEnabled)
-                Toggle("Pause timer when system sleeps", isOn: Binding(
+                Toggle(L10n.tr("Pause timer when system sleeps"), isOn: Binding(
                     get: { settings.settings.pauseOnSleep },
                     set: { settings.settings.pauseOnSleep = $0 }
                 ))
-                Toggle("Disconnect immediately on system sleep", isOn: Binding(
+                Toggle(L10n.tr("Disconnect immediately on system sleep"), isOn: Binding(
                     get: { settings.settings.disconnectOnSleep },
                     set: { settings.settings.disconnectOnSleep = $0 }
                 ))
             }
-            Section("Launch & Updates") {
-                Toggle("Launch at login", isOn: Binding(
+            Section(L10n.tr("Launch & Updates")) {
+                Toggle(L10n.tr("Launch at login"), isOn: Binding(
                     get: { loginAtStart },
                     set: { newValue in
                         loginAtStart = newValue
                         LoginItemManager.shared.setEnabled(newValue)
-                        loginStatus = LoginItemManager.shared.statusDescription
+                        loginStatus = LoginItemManager.shared.localizedStatusDescription
                     }
                 ))
-                Text("Status: \(loginStatus)").font(.caption).foregroundColor(.secondary)
-                Toggle("Check for updates automatically", isOn: Binding(
+                Text(L10n.tr("Status: %@", loginStatus)).font(.caption).foregroundColor(.secondary)
+                Toggle(L10n.tr("Check for updates automatically"), isOn: Binding(
                     get: { settings.settings.autoCheckForUpdates },
                     set: { settings.settings.autoCheckForUpdates = $0 }
                 ))
@@ -166,8 +166,8 @@ private struct GeneralTab: View {
     }
 
     private var lastCheckedText: String {
-        guard let last = settings.settings.lastUpdateCheck else { return "Last checked: never" }
-        return "Last checked: \(last.formatted(date: .abbreviated, time: .shortened))"
+        guard let last = settings.settings.lastUpdateCheck else { return L10n.tr("Last checked: never") }
+        return L10n.tr("Last checked: %@", last.formatted(date: .abbreviated, time: .shortened))
     }
 }
 
@@ -196,14 +196,14 @@ private struct DevicesTab: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("Paired Bluetooth audio devices").font(.headline)
+                Text(L10n.tr("Paired Bluetooth audio devices")).font(.headline)
                 Spacer()
-                Button("Refresh") { reload() }
+                Button(L10n.tr("Refresh")) { reload() }
             }
 
             if devices.isEmpty {
                 Spacer()
-                Text("No paired Bluetooth audio devices found.")
+                Text(L10n.tr("No paired Bluetooth audio devices found."))
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity)
                 Spacer()
@@ -256,15 +256,15 @@ private struct DeviceRow: View {
                 }
                 Spacer()
                 if device.isConnected {
-                    Label("connected", systemImage: "dot.radiowaves.left.and.right")
+                    Label(L10n.tr("connected"), systemImage: "dot.radiowaves.left.and.right")
                         .font(.caption)
                         .foregroundColor(.green)
                 } else {
-                    Label("offline", systemImage: "moon.zzz")
+                    Label(L10n.tr("offline"), systemImage: "moon.zzz")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                Toggle("Monitor", isOn: Binding(
+                Toggle(L10n.tr("Monitor"), isOn: Binding(
                     get: { enabled },
                     set: {
                         settings.setDeviceEnabled(address: device.address, enabled: $0)
@@ -275,7 +275,7 @@ private struct DeviceRow: View {
                 .labelsHidden()
             }
             HStack {
-                Toggle("Custom timeout", isOn: Binding(
+                Toggle(L10n.tr("Custom timeout"), isOn: Binding(
                     get: { usingCustom },
                     set: { newValue in
                         if newValue {
@@ -303,10 +303,10 @@ private struct DeviceRow: View {
                         ),
                         in: 1...60, step: 1
                     )
-                    Text("\(Int((settings.deviceSettings(for: device.address)?.customTimeoutSeconds ?? settings.settings.globalTimeoutSeconds) / 60)) min")
+                    Text(L10n.tr("%ld min", Int((settings.deviceSettings(for: device.address)?.customTimeoutSeconds ?? settings.settings.globalTimeoutSeconds) / 60)))
                         .frame(width: 60, alignment: .trailing).monospacedDigit()
                 } else {
-                    Text("uses global (\(Int(settings.settings.globalTimeoutSeconds / 60)) min)")
+                    Text(L10n.tr("uses global (%ld min)", Int(settings.settings.globalTimeoutSeconds / 60)))
                         .font(.caption).foregroundColor(.secondary)
                 }
             }
@@ -320,14 +320,14 @@ private struct AppsTab: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Whitelist — keep BT audio connected while these apps run")
+            Text(L10n.tr("Whitelist — keep BT audio connected while these apps run"))
                 .font(.headline)
-            Text("Useful for video calls, music apps that pause without 'playing' state, etc.")
+            Text(L10n.tr("Useful for video calls, music apps that pause without 'playing' state, etc."))
                 .font(.caption).foregroundColor(.secondary)
 
             if settings.settings.whitelistApps.isEmpty {
                 Spacer()
-                Text("No apps in whitelist.").foregroundColor(.secondary).frame(maxWidth: .infinity)
+                Text(L10n.tr("No apps in whitelist.")).foregroundColor(.secondary).frame(maxWidth: .infinity)
                 Spacer()
             } else {
                 ScrollView {
@@ -353,7 +353,7 @@ private struct AppsTab: View {
             }
 
             HStack {
-                Button("Add running app…") { pickerPresented = true }
+                Button(L10n.tr("Add running app…")) { pickerPresented = true }
                 Spacer()
             }
         }
@@ -398,11 +398,11 @@ private struct AddAppSheet: View {
     var body: some View {
         VStack(spacing: 8) {
             HStack {
-                Text("Pick an app to whitelist").font(.headline)
+                Text(L10n.tr("Pick an app to whitelist")).font(.headline)
                 Spacer()
-                Button("Cancel", action: onCancel).keyboardShortcut(.escape, modifiers: [])
+                Button(L10n.tr("Cancel"), action: onCancel).keyboardShortcut(.escape, modifiers: [])
             }
-            TextField("Filter by name or bundle id", text: $filter)
+            TextField(L10n.tr("Filter by name or bundle id"), text: $filter)
                 .textFieldStyle(.roundedBorder)
 
             List(filtered, id: \.bundleId) { item in
@@ -439,12 +439,12 @@ private struct AboutTab: View {
             Image(systemName: "headphones")
                 .font(.system(size: 48))
                 .foregroundColor(.accentColor)
-            Text("BT Audio Idle Disconnect").font(.title2.weight(.semibold))
-            Text("Version \(UpdateChecker.currentVersionString) (build \(UpdateChecker.currentBuildString))")
+            Text(verbatim: "BT Audio Idle Disconnect").font(.title2.weight(.semibold))
+            Text(L10n.tr("Version %@ (build %@)", UpdateChecker.currentVersionString, UpdateChecker.currentBuildString))
                 .font(.callout)
                 .foregroundColor(.secondary)
                 .textSelection(.enabled)
-            Text("Disconnects paired Bluetooth audio devices after a configurable idle period.")
+            Text(L10n.tr("Disconnects paired Bluetooth audio devices after a configurable idle period."))
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
@@ -452,18 +452,18 @@ private struct AboutTab: View {
             UpdatesSection(updater: UpdateChecker.shared)
             Divider().padding(.vertical, 8)
             VStack(alignment: .leading, spacing: 4) {
-                Text("Log file:").font(.caption).foregroundColor(.secondary)
+                Text(L10n.tr("Log file:")).font(.caption).foregroundColor(.secondary)
                 Text(AppLogger.shared.logFileURL.path)
                     .font(.caption.monospaced())
                     .textSelection(.enabled)
             }
-            Button("Open log file") {
+            Button(L10n.tr("Open log file")) {
                 NSWorkspace.shared.open(AppLogger.shared.logFileURL)
             }
             Divider().padding(.vertical, 8)
             VStack(spacing: 4) {
-                Text("Developer").font(.caption).foregroundColor(.secondary)
-                Text("Bartłomiej Zimny").font(.callout.weight(.medium))
+                Text(L10n.tr("Developer")).font(.caption).foregroundColor(.secondary)
+                Text(verbatim: "Bartłomiej Zimny").font(.callout.weight(.medium))
                 Link("raccoonsoftware.pl", destination: URL(string: "https://raccoonsoftware.pl")!)
                     .font(.callout)
                 Link("bartlomiejzimny@outlook.com", destination: URL(string: "mailto:bartlomiejzimny@outlook.com")!)
@@ -478,32 +478,32 @@ private struct UpdatesSection: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text("Updates").font(.caption).foregroundColor(.secondary)
+            Text(L10n.tr("Updates")).font(.caption).foregroundColor(.secondary)
             switch updater.state {
             case .idle:
-                checkButton("Check for Updates")
+                checkButton(L10n.tr("Check for Updates"))
             case .checking:
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
-                    Text("Checking for updates…")
+                    Text(L10n.tr("Checking for updates…"))
                 }
             case .upToDate:
-                Text("You're up to date.").font(.callout)
-                checkButton("Check Again")
+                Text(L10n.tr("You're up to date.")).font(.callout)
+                checkButton(L10n.tr("Check Again"))
             case .available(let release):
                 available(release)
             case .downloading(let progress):
                 ProgressView(value: progress) {
-                    Text("Downloading update… \(Int(progress * 100))%").font(.callout)
+                    Text(L10n.tr("Downloading update… %ld%%", Int(progress * 100))).font(.callout)
                 }
                 .frame(maxWidth: 320)
             case .installing:
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
-                    Text("Installing — the app will relaunch.")
+                    Text(L10n.tr("Installing — the app will relaunch."))
                 }
             case .manualInstallRequired:
-                Text("The app's folder isn't writable, so the update was verified and its disk image opened. Drag BT Audio Idle onto Applications to finish.")
+                Text(L10n.tr("The app's folder isn't writable, so the update was verified and its disk image opened. Drag BT Audio Idle onto Applications to finish."))
                     .font(.callout)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
@@ -513,7 +513,7 @@ private struct UpdatesSection: View {
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
-                checkButton("Try Again")
+                checkButton(L10n.tr("Try Again"))
             }
         }
     }
@@ -524,7 +524,7 @@ private struct UpdatesSection: View {
 
     @ViewBuilder
     private func available(_ release: Release) -> some View {
-        Text("Version \(release.displayVersion) is available — you have \(UpdateChecker.currentVersionString).")
+        Text(L10n.tr("Version %1$@ is available — you have %2$@.", release.displayVersion, UpdateChecker.currentVersionString))
             .font(.callout.weight(.medium))
         if let notes = release.body?.trimmingCharacters(in: .whitespacesAndNewlines), !notes.isEmpty {
             ScrollView {
@@ -540,10 +540,10 @@ private struct UpdatesSection: View {
             .padding(.horizontal)
         }
         HStack(spacing: 12) {
-            Button("Download & Install") { updater.downloadAndInstall() }
+            Button(L10n.tr("Download & Install")) { updater.downloadAndInstall() }
                 .keyboardShortcut(.defaultAction)
                 .disabled(release.dmgAsset == nil)
-            Link("View on GitHub", destination: release.htmlURL)
+            Link(L10n.tr("View on GitHub"), destination: release.htmlURL)
         }
     }
 

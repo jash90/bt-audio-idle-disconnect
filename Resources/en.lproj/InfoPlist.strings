@@ -1,0 +1,2 @@
+/* English Info.plist strings (permission prompts shown by macOS). */
+"NSBluetoothAlwaysUsageDescription" = "BT Audio Idle needs Bluetooth access to detect and disconnect paired audio devices when idle.";
