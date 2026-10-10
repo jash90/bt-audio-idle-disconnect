@@ -262,7 +262,9 @@ fi
 log "Verify uploaded asset"
 REMOTE_DMGS="$(gh release view "$TAG" -R "$REPO" --json assets --jq '[.assets[] | select(.name | endswith(".dmg"))] | length')"
 [ "$REMOTE_DMGS" = 1 ] || die "release has $REMOTE_DMGS .dmg assets, expected 1"
-REMOTE_DIGEST="$(gh api "repos/$REPO/releases/tags/$TAG" --jq '.assets[] | select(.name | endswith(".dmg")) | .digest' 2>/dev/null || true)"
+# On a 404 (drafts) `gh api` prints the error body to stdout, so discard the output on failure.
+REMOTE_DIGEST="$(gh api "repos/$REPO/releases/tags/$TAG" --jq '.assets[] | select(.name | endswith(".dmg")) | .digest' 2>/dev/null)" \
+    || REMOTE_DIGEST=""
 if [ -z "$REMOTE_DIGEST" ]; then
     # Draft releases are not reachable via /releases/tags; look it up in the list.
     REMOTE_DIGEST="$(gh api "repos/$REPO/releases" --jq ".[] | select(.tag_name == \"$TAG\") | .assets[] | select(.name | endswith(\".dmg\")) | .digest")"
