@@ -1,25 +1,28 @@
+**English** · [Polski](README.pl.md)
+
 # BT Audio Idle Disconnect
 
-Menu bar app dla macOS, która rozłącza sparowane słuchawki / głośniki Bluetooth, gdy nic nie jest odtwarzane przez konfigurowalny czas (domyślnie 10 min) — z opcjonalnym powiadomieniem i przyciskiem "Cancel" tuż przed rozłączeniem.
+A macOS menu bar app that disconnects paired Bluetooth headphones / speakers when nothing has been playing for a configurable time (10 min by default), with an optional notification and a "Cancel" button right before the disconnect.
 
-## Funkcje
+## Features
 
-- **Wykrywanie ciszy** przez CoreAudio (`kAudioDevicePropertyDeviceIsRunningSomewhere` na domyślnym wyjściu)
-- **Per-device settings**: enable/disable monitorowania, własny timeout (override globalnego)
-- **Whitelist apek** — jeśli któraś z nich działa, idle timer się nie uruchamia (np. Zoom, Spotify)
-- **Pre-disconnect grace** — powiadomienie systemowe z akcją **Cancel** na X sekund przed rozłączeniem
-- **Snooze** — kliknięcie Cancel przedłuża monitorowanie o konfigurowalny czas (domyślnie 5 min)
-- **Auto-start przy logowaniu** przez `SMAppService.mainApp`
-- **Sleep / Wake** — pauzuje timer przy uśpieniu (opcjonalnie: natychmiastowy disconnect)
-- **Logi** w `~/Library/Logs/BTAudioIdleDisconnect.log` (rotacja przy 1 MB)
-- **Preferencje** (SwiftUI, 4 taby): General / Devices / Apps / About
-- **Aktualizacje z GitHub Releases** — *Check for Updates…* w menu i w zakładce About: wykrywa nowszą wersję, pokazuje release notes, pobiera DMG, weryfikuje SHA-256 i podmienia aplikację z restartem. Opcjonalne automatyczne sprawdzanie raz na dobę (domyślnie włączone)
+- **Silence detection** via CoreAudio (`kAudioDevicePropertyDeviceIsRunningSomewhere` on the default output)
+- **Per-device settings**: enable/disable monitoring, custom timeout (overrides the global one)
+- **App whitelist**: if any of these apps is running, the idle timer does not start (e.g. Zoom, Spotify)
+- **Pre-disconnect grace**: a system notification with a **Cancel** action X seconds before the disconnect
+- **Snooze**: clicking Cancel extends monitoring by a configurable time (5 min by default)
+- **Launch at login** via `SMAppService.mainApp`
+- **Sleep / Wake**: pauses the timer on sleep (optionally: disconnect immediately)
+- **Logs** in `~/Library/Logs/BTAudioIdleDisconnect.log` (rotated at 1 MB)
+- **Preferences** (SwiftUI, 4 tabs): General / Devices / Apps / About
+- **Updates from GitHub Releases**: *Check for Updates…* in the menu and in the About tab detects a newer version, shows the release notes, downloads the DMG, verifies SHA-256 and replaces the app with a relaunch. Optional automatic check once a day (on by default)
+- **UI in English and Polish** (follows the macOS language)
 
-## Wymagania
+## Requirements
 
 - macOS 13+
-- Xcode 15+ lub Swift toolchain 5.9+
-- Sparowane urządzenie BT audio
+- Xcode 15+ or Swift toolchain 5.9+
+- A paired Bluetooth audio device
 
 ## Build
 
@@ -30,20 +33,20 @@ mv "build/BT Audio Idle.app" /Applications/
 open "/Applications/BT Audio Idle.app"
 ```
 
-Pierwsze uruchomienie: Gatekeeper może blokować — prawy klik → **Open**. macOS zapyta o uprawnienie do powiadomień; zgódź się, jeśli chcesz "Cancel" przed rozłączeniem.
+First launch: Gatekeeper may block the app. Right-click → **Open**. macOS will ask for notification permission; allow it if you want the "Cancel" prompt before a disconnect.
 
-## Pliki konfiguracyjne
+## Configuration files
 
-| Plik | Co tam jest |
-|------|-------------|
-| `~/Library/Application Support/BTAudioIdleDisconnect/settings.json` | wszystkie ustawienia (devices, apps, timeouts) |
-| `~/Library/Logs/BTAudioIdleDisconnect.log` | logi działania, rotacja przy 1 MB → `.log.1` |
+| File | Contents |
+|------|----------|
+| `~/Library/Application Support/BTAudioIdleDisconnect/settings.json` | all settings (devices, apps, timeouts) |
+| `~/Library/Logs/BTAudioIdleDisconnect.log` | runtime logs, rotated at 1 MB → `.log.1` |
 
-## Architektura
+## Architecture
 
 ```
-main.swift                  bootstrap NSApplication (.accessory)
-AppDelegate.swift           wiring monitorów i kontrolera
+main.swift                  NSApplication bootstrap (.accessory)
+AppDelegate.swift           wiring of monitors and the controller
 
 AudioMonitor                CoreAudio listener (default device + isRunning)
 BluetoothManager            IOBluetooth: paired list + closeConnection()
@@ -54,52 +57,47 @@ LoginItemManager            SMAppService.mainApp
 SettingsStore               Codable JSON → Application Support, @Published
 UpdateChecker               GitHub Releases: check → download → SHA-256 → hdiutil → swap + relaunch
 
-IdleController              orkiestracja: idle → grace → disconnect, snooze, sleep
-MenuBarController           NSStatusItem + dynamiczne menu z countdownem
+IdleController              orchestration: idle → grace → disconnect, snooze, sleep
+MenuBarController           NSStatusItem + dynamic menu with a countdown
 SettingsWindow              SwiftUI TabView (General / Devices / Apps / About)
-AppLogger                   ISO8601 → plik + stderr, rotacja
+AppLogger                   ISO8601 → file + stderr, rotation
 ```
 
-Stan przepływu:
+Flow states:
 
 ```
 audio playing   → timer off
-audio silent    → idle timer (per-device min timeout, lub globalny)
-timeout fired   → grace period + notification z "Cancel"
-grace fired     → IOBluetoothDevice.closeConnection() na wszystkich monitorowanych
-Cancel tapped   → snooze (restart idle z innym czasem)
-sleep           → pause | disconnect (per ustawienie)
-wake            → ponownie evaluate
+audio silent    → idle timer (minimum per-device timeout, or the global one)
+timeout fired   → grace period + notification with "Cancel"
+grace fired     → IOBluetoothDevice.closeConnection() on all monitored devices
+Cancel tapped   → snooze (restart idle with a different duration)
+sleep           → pause | disconnect (per setting)
+wake            → evaluate again
 ```
 
-## Wydanie nowej wersji (release)
+## Development
 
-Updater w aplikacji czyta `https://api.github.com/repos/jash90/bt-audio-idle-disconnect/releases/latest`, więc każde wydanie musi spełniać:
+`scripts/ci.sh` builds the app and runs the tests. Optional pre-push hook: `git config core.hooksPath .githooks`.
 
-1. `CFBundleShortVersionString` w `Resources/Info.plist` podbity (np. `1.2.0`), `CFBundleVersion` +1.
-2. Tag `vX.Y.Z` **równy** `CFBundleShortVersionString` — updater odrzuca DMG, w którym wersja aplikacji nie zgadza się z tagiem.
-3. Dokładnie jeden plik `.dmg` jako asset, zbudowany przez `./scripts/build-dmg.sh`. GitHub sam dodaje do assetu digest SHA-256 — bez niego aktualizacja nie zostanie zainstalowana automatycznie.
-4. Release nie może być draftem ani pre-release (`/latest` je pomija).
+## Releasing a new version
 
-```bash
-./scripts/build-dmg.sh
-gh release create v1.2.0 "build/BT Audio Idle 1.2.0.dmg" --title "v1.2.0" --notes-file notes.md
-```
+Releases are built locally: `scripts/bump-version.sh X.Y.Z`, then `scripts/release.sh` (rehearse with `scripts/release.sh --dry-run`).
 
-Jak działa instalacja: DMG trafia do `~/Library/Caches/BTAudioIdleDisconnect/Updates/`, po weryfikacji SHA-256 jest montowany (`hdiutil`), sprawdzane są bundle id, wersja i `codesign --verify`, a aplikacja jest kopiowana do `staged/`. Następnie odłączony skrypt `install.sh` czeka na zamknięcie aplikacji, podmienia bundle (z przywróceniem starej wersji przy błędzie) i uruchamia ją ponownie. Wpisy `installer:` lądują w zwykłym logu. Jeśli katalog aplikacji nie jest zapisywalny, updater otwiera zweryfikowany DMG do ręcznego przeciągnięcia.
+A release must satisfy the in-app updater contract: tag `vX.Y.Z` equal to `CFBundleShortVersionString`, exactly one `.dmg` asset with a GitHub SHA-256 digest, and not a draft or pre-release. `release.sh` enforces this. See [RELEASING.md](RELEASING.md) for details.
 
-## Ograniczenia
+How installation works: the DMG is downloaded to `~/Library/Caches/BTAudioIdleDisconnect/Updates/`, mounted (`hdiutil`) after SHA-256 verification, the bundle id, version and `codesign --verify` are checked, and the app is copied to `staged/`. A detached `install.sh` script then waits for the app to quit, swaps the bundle (restoring the old version on failure) and relaunches it. `installer:` entries go to the regular log. If the app's directory is not writable, the updater opens the verified DMG for a manual drag-and-drop.
 
-- **`IOBluetooth.closeConnection()`** jest publiczne, ale legacy. Apple nie oferuje sandbox-friendly alternatywy → **w App Store nie przejdzie**. Dystrybucja: direct download + notarization (lub ad-hoc lokalnie).
-- **`SMAppService.mainApp`** wymaga, aby aplikacja była .app bundle w `/Applications` (lub innym stabilnym miejscu); pierwsze włączenie może wymagać zatwierdzenia w *System Settings → General → Login Items*.
-- **Auto-reconnect macOS**: niektóre urządzenia / wersje systemu próbują reconnectować po rozłączeniu. Jeśli to robi problem — w *Bluetooth → ⓘ przy urządzeniu* wyłącz auto-connect (jeśli twoje urządzenie to wspiera), albo apka rozłączy ponownie po kolejnym timeoucie.
-- Wykrywa audio tylko na **domyślnym wyjściu**. App piszący bezpośrednio do innego urządzenia może uciec wykrywaniu.
-- Whitelist sprawdza tylko **czy proces apki istnieje** (NSWorkspace) — nie wie, czy apka faktycznie używa audio.
-- **Aktualizacje**: wersje ≤ 1.1.0 nie mają updatera — na 1.2.0 trzeba przejść raz ręcznie. Przy podpisie ad-hoc tożsamość aplikacji to hash binarki, więc po aktualizacji macOS może ponownie zapytać o powiadomienia / Bluetooth, a *Launch at login* może wymagać ponownego włączenia. SHA-256 z GitHuba chroni przed uszkodzonym pobraniem, ale nie potwierdza autora (digest pochodzi z tego samego konta) — pełne uwierzytelnienie dałby dopiero Developer ID + notaryzacja.
+## Limitations
 
-## Co dalej (poza tym scope)
+- **`IOBluetooth.closeConnection()`** is public but legacy. Apple offers no sandbox-friendly alternative → **it will not pass App Store review**. Distribution: direct download + notarization (or ad-hoc locally).
+- **`SMAppService.mainApp`** requires the app to be a .app bundle in `/Applications` (or another stable location); enabling it for the first time may require approval in *System Settings → General → Login Items*.
+- **macOS auto-reconnect**: some devices / OS versions try to reconnect after a disconnect. If that is a problem, turn off auto-connect in *Bluetooth → ⓘ next to the device* (if your device supports it), otherwise the app will disconnect again after the next timeout.
+- Audio is detected only on the **default output**. An app writing directly to another device can escape detection.
+- The whitelist only checks **whether the app's process exists** (NSWorkspace); it does not know whether the app is actually using audio.
+- **Updates**: versions ≤ 1.1.0 have no updater, so moving to 1.2.0 has to be done manually once. With ad-hoc signing the app's identity is the binary hash, so after an update macOS may ask again for notification / Bluetooth permissions, and *Launch at login* may need to be re-enabled. The SHA-256 digest from GitHub protects against a corrupted download but does not authenticate the author (the digest comes from the same account); full authentication would require Developer ID + notarization.
 
-- Ikona aplikacji (.icns) + custom symbole
-- Statystyki rozłączeń (history)
-- Reguły wg lokalizacji / sieci Wi-Fi
-- Tłumaczenia PL/EN
+## What's next (out of scope)
+
+- App icon (.icns) + custom symbols
+- Disconnect statistics (history)
+- Rules by location / Wi-Fi network
