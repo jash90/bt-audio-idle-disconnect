@@ -20,6 +20,8 @@ VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_
 if [ -n "$VERSION" ]; then
     DMG_PATH="build/${DISPLAY_NAME} ${VERSION}.dmg"
 fi
+# scripts/release.sh passes an explicit output path.
+DMG_PATH="${DMG_OUT:-$DMG_PATH}"
 
 echo "→ Staging contents"
 STAGE="$(mktemp -d)"
